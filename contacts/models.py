@@ -1,0 +1,92 @@
+from django.db import models
+from django.contrib.gis.db import models
+from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.auth.models import User
+from django.utils import timezone
+from django.conf import settings   # to access the current logged-in User object: settings.AUTH_USER_MODEL
+
+# NOTE:  setting the default User to settings.AUTH_USER_MODEL seems not to work
+
+# Create your models here.
+
+
+class Organization(models.Model):
+    '''
+    Class representing Organizations to which Contacts may belong
+    '''
+    org_name = models.CharField("Organization Name", max_length=80, blank=False)
+    org_address1 = models.CharField("Address1", max_length=60, blank=True)
+    org_address2 = models.CharField("Address2", max_length=24, blank=True)
+    org_city = models.CharField("City", max_length=40, blank=True)
+    org_state = models.CharField("State", max_length=2, blank=True)
+    org_zipcode = models.CharField("ZIP", max_length=10, blank=True)
+
+
+class Contact(models.Model):
+    '''
+    Class representing an individual person with whom contact has been made on
+    this project Address, Phone, Email information are attached to this person,
+    not necessarily the location of the incident or the resident at that location.
+    '''
+    first_name = models.CharField("First Name", max_length=24, blank=True)
+    last_name = models.CharField("Last Name", max_length=50, blank=True)
+    textnote = models.CharField("Note", max_length=120, blank=True)
+    organization = models.ForeignKey('Organization', on_delete=models.SET_NULL, blank=True, null=True, related_name='members')
+    org_title = models.CharField("Title", max_length=40, blank=True)
+    email = models.EmailField("Email Address", max_length=80, blank=True)
+    phone = models.CharField("Phone", max_length=12, blank=True, help_text="Phone: xxx-xxx-xxxx")
+    address = models.CharField("Address 1", max_length=60, blank=True)
+    address2 = models.CharField("Address 2", max_length=24, blank=True)
+    city = models.CharField("City", max_length=40, blank=True)
+    state = models.CharField("State", max_length=2, blank=True)
+    zipcode = models.CharField("ZIP", max_length=10, blank=True)
+
+    class Meta:
+        ordering = ["last_name", "first_name"]
+
+    def __str__(self):
+        return self.first_name + " " + self.last_name
+
+
+class Subject(models.Model):
+    '''
+    The description and location of an issue reported by a Contact.
+    Subjects are linked to the Contact who initiated the issue.
+    Subjects are attached to points on a map.  There are no pointless subjects.
+    '''
+    summary = models.CharField(max_length=60)
+    employee = models.ForeignKey(User, on_delete=models.PROTECT)
+    contact = models.ForeignKey('Contact', on_delete=models.PROTECT, blank=True, null=True)
+    initial_date = models.DateField('Start Date', editable=True, default=timezone.now)
+    coordinates = models.PointField(srid=4326, null=True)
+
+
+class Comment(models.Model):
+    '''
+    Class representing the single comments attached to a Subject
+    to/from one Contact to/from a Employee
+    '''
+    contact = models.ForeignKey('Contact', on_delete=models.PROTECT, help_text="Individual who contacted PI")
+    employee = models.ForeignKey(User, on_delete=models.PROTECT)
+    timestamp = models.DateTimeField(auto_now_add=True) # stores the time the comment was created (not editable)
+    comment_datetime = models.DateTimeField(default=timezone.now) # editable datetime to allow user to backdate
+    subject = models.ForeignKey('Subject', blank=True, null=True, on_delete=models.PROTECT)
+    commentxt = models.TextField('Comment Summary')
+    # attachment = models.FileField('Attachment', upload_to='uploads/') # attach photos, flyers, random files
+
+    DIRECTION_CHOICES = (
+        ('in', 'Incoming'),
+        ('out', 'Outgoing')
+    )
+    direction = models.CharField(max_length=3, choices=DIRECTION_CHOICES)
+
+    METHOD_CHOICES = (
+        ('phone', 'Phone Conversation'),
+        ('email', 'Email Correspondence'),
+        ('person', 'In-Person Conversation'),
+        ('web', 'Sumitted on Web Form'),
+    )
+    method = models.CharField(max_length=6, choices=METHOD_CHOICES)
+
+    class Meta:
+        ordering = ["-timestamp"]
