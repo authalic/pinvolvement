@@ -72,7 +72,7 @@ class Comment(models.Model):
     comment_datetime = models.DateTimeField(default=timezone.now) # editable datetime to allow user to backdate
     subject = models.ForeignKey('Subject', blank=True, null=True, on_delete=models.PROTECT)
     commentxt = models.TextField('Comment Summary')
-    # attachment = models.FileField('Attachment', upload_to='uploads/') # attach photos, flyers, random files
+    attachment = models.FileField('Attachment', upload_to='comments/', null=True, blank=True) # attach photos, flyers, random files
 
     DIRECTION_CHOICES = (
         ('in', 'Incoming'),

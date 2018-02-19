@@ -11,15 +11,26 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# set the location of files attached to the Comment objects
+MEDIA_ROOT = os.path.join(BASE_DIR, 'contacts/media/')
+# MEDIA_URL
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.0/howto/static-files/
+
+STATIC_URL = '/static/'
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# store secret key outside version control
 SECRET_KEY = open('..//keys//PIapp//keys.txt').read()
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -62,6 +73,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -75,16 +87,9 @@ WSGI_APPLICATION = 'pi_app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'pi_data',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
+
+# Store database settings outside version control
+DATABASES = json.load(open('..//keys//PIapp//dbsettings_aws.json'))
 
 
 # Password validation
@@ -120,11 +125,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
-
-STATIC_URL = '/static/'
-
+# Leaflet Configuration (set the initial zoom and center point)
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (40.7, -111.9),
     'DEFAULT_ZOOM': 11,
