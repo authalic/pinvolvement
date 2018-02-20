@@ -1,0 +1,33 @@
+{% extends "contacts/base.html" %}
+
+{% block loadleaflet %}
+    {% load leaflet_tags %}
+{% endblock %}
+
+{% block leafletheaders %}
+    {% leaflet_js %}
+    {% leaflet_css %}
+{% endblock %}
+
+{% block title %}<title>Subject Detail: {{ subject.summary }}</title>{% endblock %}
+
+
+{% block content %}
+    <h3>Subject Detail</h1>
+
+    <p>Summary: {{ subject.summary }}</p>
+    <hr>
+    <p>Contact: {{ subject.contact }}</p>
+    <p>Start Date: {{ subject.initial_date }}</p>
+    <p>Last Activity: {{ subject.last_activity }}</p>
+    <div>
+        {% leaflet_map "subjectmap" callback="subjectmap_init" %}
+    </div>
+
+    <script>
+        function subjectmap_init(map, options) {
+            // use leaflet api here
+        }
+    </script>
+
+{% endblock %}

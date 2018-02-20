@@ -1,0 +1,13 @@
+{% extends "contacts/base.html" %}
+
+{% block title %}<title>Organization Detail: {{ contact.pk }}</title>{% endblock %}
+
+
+{% block content %}
+    <h3>Organization Detail</h1>
+
+    <p>{{ organization.org_name }}</p>
+    <p>{{ organization.org_address1 }} {{ organization.org_address2 }}</p>
+    <p>{{ organization.org_city }} {{ organication.org_state }} {{ organization.org_zipcode }}
+
+{% endblock %}

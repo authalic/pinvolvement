@@ -10,10 +10,12 @@
         <ul>
             {% for subj in subject_list %}
                 <li>
-                    <b>{{ subj.summary }}</b> {{ subj.contact }} {{ subj.initial_date }}
+                    <a href="{% url 'subject-detail' subj.pk %}"><b>{{ subj.summary }}</b></a> {{ subj.contact }} {{ subj.initial_date }}
                 </li>
             {% endfor %}
         </ul>
+    {% else %}
+        <p>No subjects in database</p>
     {% endif %}
 
 {% endblock %}

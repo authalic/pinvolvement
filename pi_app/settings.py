@@ -17,8 +17,13 @@ import json
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # set the location of files attached to the Comment objects
-MEDIA_ROOT = os.path.join(BASE_DIR, 'contacts/media/')
-# MEDIA_URL
+
+# ALERT:   This isn't working properly in Development mode.  Needs to save files to a web server
+
+MEDIA_ROOT = 'media/contacts/'
+MEDIA_URL = 'media/'
+
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -68,7 +73,10 @@ ROOT_URLCONF = 'pi_app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates/registration'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,6 +133,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Redirect to home URL after login (Default redirects to /accounts/profile/)
+LOGIN_REDIRECT_URL = '/'
 
 # Leaflet Configuration (set the initial zoom and center point)
 LEAFLET_CONFIG = {

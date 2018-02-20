@@ -10,10 +10,12 @@
         <ul>
             {% for contact in contact_list %}
                 <li>
-                    {{ contact.first_name }} {{ contact.last_name }}
+                    <a href="{% url 'contact-detail' contact.pk %}">{{ contact.first_name }} {{ contact.last_name }}</a>
                 </li>
             {% endfor %}
         </ul>
+    {% else %}
+        <p>No contacts in database</p>
     {% endif %}
 
 {% endblock %}

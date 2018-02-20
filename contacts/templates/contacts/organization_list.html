@@ -10,10 +10,12 @@
         <ul>
             {% for org in organization_list %}
                 <li>
-                    <b>{{ org.org_name }}</b> {{ org.address_1 }}, {{ org.org_city }}
+                    <a href="{% url 'org-detail' org.pk %}"><b>{{ org.org_name }}</b></a> {{ org.address_1 }}, {{ org.org_city }}
                 </li>
             {% endfor %}
         </ul>
-    {% endif %}
+        {% else %}
+        <p>No organizations in database</p>
+        {% endif %}
 
 {% endblock %}

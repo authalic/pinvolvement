@@ -10,10 +10,12 @@
         <ul>
             {% for comm in comment_list %}
                 <li>
-                    <b>{{ comm.subject }}</b> {{ comm.contact }} {{ comm.initial_date }}
+                    <a href="{% url 'comment-detail' comm.pk %}"><b>{{ comm.subject }}</b></a> {{ comm.contact }} {{ comm.initial_date }}
                 </li>
             {% endfor %}
         </ul>
+    {% else %}
+        <p>No comments in database</p>
     {% endif %}
 
 {% endblock %}

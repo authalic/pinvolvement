@@ -1,15 +1,18 @@
 {% extends "contacts/base.html" %}
 
-{% block title %}<title>Comment Detail: {{ contact.pk }}</title>{% endblock %}
+{% block title %}<title>Comment Detail: {{ comment }}</title>{% endblock %}
 
 
 {% block content %}
-    <h3>Contact Detail</h1>
+    <h3>Comment Detail</h1>
 
-    <p>{{ contact.first_name }} {{ contact.last_name }}</p>
-    <p>Note: {{ contact.textnote }}</p>
-    <hr>
-    <p>Organization: {{ contact.organization }}</p>
-    <p>Organization Title: {{ contact.org_title }}</p>
+    <p>Subject: {{ comment.subject }}</p>
+    <p>Contact: {{ comment.contact }}</p>
+    <p>Direction of Comment: {{ comment.direction }}</p>
+    <p>Employee: {{ comment.employee }}</p>
+    <p>Method of Contact: {{ comment.method }}</p>
+    <p>Summary of comment:</p>
+    <p>{{ comment.commentxt }}</p>
+    <p>attachments: {{ comment.attachment }}</p>
 
 {% endblock %}

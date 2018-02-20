@@ -29,12 +29,14 @@ def index(request):
 
 
 # Generic CBVs
-# templates at: /templates/contacts/modelname_list.html
-#               /templates/contacts/modelname_detail.html
+# templates are set by default in the CBVs at: 
+#   /templates/contacts/[modelname]_list.html
+#   /templates/contacts/[modelname]_detail.html
 
 
 class ContactListView(generic.ListView):
     model = Contact
+    paginate_by = 10
 
 
 class OrganizationListView(generic.ListView):
@@ -43,10 +45,12 @@ class OrganizationListView(generic.ListView):
 
 class SubjectListView(generic.ListView):
     model = Subject
+    paginate_by = 10
 
 
 class CommentListView(generic.ListView):
     model = Comment
+    paginate_by = 20
 
 
 class ContactDetailView(generic.DetailView):

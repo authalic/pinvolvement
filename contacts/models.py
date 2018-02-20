@@ -4,6 +4,7 @@ from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings   # to access the current logged-in User object: settings.AUTH_USER_MODEL
+import uuid
 
 # NOTE:  setting the default User to settings.AUTH_USER_MODEL seems not to work
 
@@ -14,6 +15,7 @@ class Organization(models.Model):
     '''
     Class representing Organizations to which Contacts may belong
     '''
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     org_name = models.CharField("Organization Name", max_length=80, blank=False)
     org_address1 = models.CharField("Address1", max_length=60, blank=True)
     org_address2 = models.CharField("Address2", max_length=24, blank=True)
@@ -21,6 +23,9 @@ class Organization(models.Model):
     org_state = models.CharField("State", max_length=2, blank=True, default="UT")
     org_zipcode = models.CharField("ZIP", max_length=10, blank=True)
 
+    class Meta:
+            ordering = ["org_name"]
+            
     def __str__(self):
         return self.org_name
 
@@ -31,6 +36,7 @@ class Contact(models.Model):
     this project Address, Phone, Email information are attached to this person,
     not necessarily the location of the incident or the resident at that location.
     '''
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name = models.CharField("First Name", max_length=24, blank=True)
     last_name = models.CharField("Last Name", max_length=50, blank=True)
     textnote = models.CharField("Note", max_length=120, blank=True)
@@ -58,6 +64,7 @@ class Subject(models.Model):
     Subjects are linked to the Contact who initiated the issue.
     Subjects are attached to points on a map.  There are no pointless subjects.
     '''
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     summary = models.CharField(max_length=60)
     employee = models.ForeignKey(User, on_delete=models.PROTECT)
     contact = models.ForeignKey('Contact', on_delete=models.PROTECT, blank=True, null=True)
@@ -65,8 +72,11 @@ class Subject(models.Model):
     last_activity = models.DateTimeField('Last Activity', editable=False, auto_now=True)
     coordinates = models.PointField('Point Location', srid=4326, null=True)
 
+    class Meta:
+        ordering = ["-last_activity"]
+
     def __str__(self):
-        return summary
+        return self.summary
 
 
 class Comment(models.Model):
@@ -74,13 +84,14 @@ class Comment(models.Model):
     Class representing the single comments attached to a Subject
     to/from one Contact to/from a Employee
     '''
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     contact = models.ForeignKey('Contact', on_delete=models.PROTECT, help_text="Individual who contacted PI")
     employee = models.ForeignKey(User, on_delete=models.PROTECT)
     timestamp = models.DateTimeField(auto_now_add=True) # stores the time the comment was created (not editable)
     comment_datetime = models.DateTimeField(default=timezone.now) # editable datetime to allow user to backdate
     subject = models.ForeignKey('Subject', blank=True, null=True, on_delete=models.PROTECT)
     commentxt = models.TextField('Comment Summary')
-    attachment = models.FileField('Attachment', upload_to='comments/', null=True, blank=True) # attach photos, flyers, random files
+    attachment = models.FileField('Attachment', upload_to='contacts/', null=True, blank=True) # attach photos, flyers, random files
 
     DIRECTION_CHOICES = (
         ('in', 'Incoming'),

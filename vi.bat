@@ -1,0 +1,1 @@
+C:\projects\python\env\PIenv\Scripts\activate
