@@ -1,0 +1,19 @@
+{% extends "contacts/base.html" %}
+
+{% block title %}<title>Comments List</title>{% endblock %}
+
+
+{% block content %}
+    <h3>Comment List</h1>
+
+    {% if comment_list %}
+        <ul>
+            {% for comm in comment_list %}
+                <li>
+                    <b>{{ comm.subject }}</b> {{ comm.contact }} {{ comm.initial_date }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+{% endblock %}

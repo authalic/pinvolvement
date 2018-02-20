@@ -1,0 +1,19 @@
+{% extends "contacts/base.html" %}
+
+{% block title %}<title>Organizations List</title>{% endblock %}
+
+
+{% block content %}
+    <h3>Organization List</h1>
+
+    {% if organization_list %}
+        <ul>
+            {% for org in organization_list %}
+                <li>
+                    <b>{{ org.org_name }}</b> {{ org.address_1 }}, {{ org.org_city }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+{% endblock %}

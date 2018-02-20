@@ -1,0 +1,19 @@
+{% extends "contacts/base.html" %}
+
+{% block title %}<title>Subjects List</title>{% endblock %}
+
+
+{% block content %}
+    <h3>Subject List</h1>
+
+    {% if subject_list %}
+        <ul>
+            {% for subj in subject_list %}
+                <li>
+                    <b>{{ subj.summary }}</b> {{ subj.contact }} {{ subj.initial_date }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+{% endblock %}

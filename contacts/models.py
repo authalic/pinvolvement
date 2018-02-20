@@ -18,8 +18,11 @@ class Organization(models.Model):
     org_address1 = models.CharField("Address1", max_length=60, blank=True)
     org_address2 = models.CharField("Address2", max_length=24, blank=True)
     org_city = models.CharField("City", max_length=40, blank=True)
-    org_state = models.CharField("State", max_length=2, blank=True)
+    org_state = models.CharField("State", max_length=2, blank=True, default="UT")
     org_zipcode = models.CharField("ZIP", max_length=10, blank=True)
+
+    def __str__(self):
+        return self.org_name
 
 
 class Contact(models.Model):
@@ -35,17 +38,18 @@ class Contact(models.Model):
     org_title = models.CharField("Title", max_length=40, blank=True)
     email = models.EmailField("Email Address", max_length=80, blank=True)
     phone = models.CharField("Phone", max_length=12, blank=True, help_text="Phone: xxx-xxx-xxxx")
-    address = models.CharField("Address 1", max_length=60, blank=True)
+    address1 = models.CharField("Address 1", max_length=60, blank=True)
     address2 = models.CharField("Address 2", max_length=24, blank=True)
     city = models.CharField("City", max_length=40, blank=True)
-    state = models.CharField("State", max_length=2, blank=True)
+    state = models.CharField("State", max_length=2, blank=True, default="UT")
     zipcode = models.CharField("ZIP", max_length=10, blank=True)
+    created = models.DateTimeField('Created', auto_now_add=True)  #stores the time and date this Contact was created
 
     class Meta:
         ordering = ["last_name", "first_name"]
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return '%s %s' % (self.first_name, self.last_name)
 
 
 class Subject(models.Model):
@@ -57,8 +61,12 @@ class Subject(models.Model):
     summary = models.CharField(max_length=60)
     employee = models.ForeignKey(User, on_delete=models.PROTECT)
     contact = models.ForeignKey('Contact', on_delete=models.PROTECT, blank=True, null=True)
-    initial_date = models.DateField('Start Date', editable=True, default=timezone.now)
-    coordinates = models.PointField(srid=4326, null=True)
+    initial_date = models.DateTimeField('Start Date', editable=True, default=timezone.now)
+    last_activity = models.DateTimeField('Last Activity', editable=False, auto_now=True)
+    coordinates = models.PointField('Point Location', srid=4326, null=True)
+
+    def __str__(self):
+        return summary
 
 
 class Comment(models.Model):
@@ -89,4 +97,8 @@ class Comment(models.Model):
     method = models.CharField(max_length=6, choices=METHOD_CHOICES)
 
     class Meta:
-        ordering = ["-timestamp"]
+        ordering = ["-comment_datetime"]
+
+    def __str__(self):
+        return '%s: %s' % (self.contact, self.subject)
+    

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views import generic
 from .models import Organization, Contact, Subject, Comment
 
 # Create your views here.
@@ -25,3 +26,40 @@ def index(request):
             'num_comment': num_comment,
         }
     )
+
+
+# Generic CBVs
+# templates at: /templates/contacts/modelname_list.html
+#               /templates/contacts/modelname_detail.html
+
+
+class ContactListView(generic.ListView):
+    model = Contact
+
+
+class OrganizationListView(generic.ListView):
+    model = Organization
+
+
+class SubjectListView(generic.ListView):
+    model = Subject
+
+
+class CommentListView(generic.ListView):
+    model = Comment
+
+
+class ContactDetailView(generic.DetailView):
+    model = Contact
+
+
+class OrganizationDetailView(generic.DetailView):
+    model = Organization
+
+
+class SubjectDetailView(generic.DetailView):
+    model = Subject
+
+
+class CommentDetailView(generic.DetailView):
+    model = Comment
