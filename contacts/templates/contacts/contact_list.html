@@ -17,5 +17,5 @@
     {% else %}
         <p>No contacts in database</p>
     {% endif %}
-
+    <a class="btn btn-default" href="{% url 'contact_create' %}" role="button">Add New</a>
 {% endblock %}

@@ -17,5 +17,5 @@
         {% else %}
         <p>No organizations in database</p>
         {% endif %}
-
+        <a class="btn btn-default" href="{% url 'organization_create' %}" role="button">Add New</a>
 {% endblock %}

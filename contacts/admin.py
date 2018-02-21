@@ -14,8 +14,8 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('subject', 'contact', 'employee', 'comment_datetime', 'commentxt', 'attachment')
-    fields = ('subject', ('contact', 'employee'), 'comment_datetime', 'commentxt', 'attachment')
+    list_display = ('subject', 'contact', 'employee', 'direction', 'method', 'comment_datetime', 'commentxt', 'attachment')
+    fields = ('subject', ('contact', 'employee'), ('direction', 'method'), 'comment_datetime', 'commentxt', 'attachment')
 
 
 # Extend LeafletGeoAdmin for leaflet map window

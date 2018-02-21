@@ -4,6 +4,7 @@ from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings   # to access the current logged-in User object: settings.AUTH_USER_MODEL
+from django.urls import reverse
 import uuid
 
 # NOTE:  setting the default User to settings.AUTH_USER_MODEL seems not to work
@@ -26,6 +27,9 @@ class Organization(models.Model):
     class Meta:
             ordering = ["org_name"]
             
+    def get_absolute_url(self):
+        return reverse('org-detail', args=[str(self.id)])
+    
     def __str__(self):
         return self.org_name
 
@@ -53,6 +57,9 @@ class Contact(models.Model):
 
     class Meta:
         ordering = ["last_name", "first_name"]
+    
+    def get_absolute_url(self):
+        return reverse('contact-detail', args=[str(self.id)])
 
     def __str__(self):
         return '%s %s' % (self.first_name, self.last_name)
@@ -75,6 +82,9 @@ class Subject(models.Model):
     class Meta:
         ordering = ["-last_activity"]
 
+    def get_absolute_url(self):
+        return reverse('subject-detail', args=[str(self.id)])
+
     def __str__(self):
         return self.summary
 
@@ -93,23 +103,26 @@ class Comment(models.Model):
     commentxt = models.TextField('Comment Summary')
     attachment = models.FileField('Attachment', upload_to='contacts/', null=True, blank=True) # attach photos, flyers, random files
 
-    DIRECTION_CHOICES = (
+    DIRECTION_CHOICES = [
         ('in', 'Incoming'),
         ('out', 'Outgoing')
-    )
+    ]
     direction = models.CharField(max_length=3, choices=DIRECTION_CHOICES)
 
-    METHOD_CHOICES = (
+    METHOD_CHOICES = [
         ('phone', 'Phone Conversation'),
         ('email', 'Email Correspondence'),
         ('person', 'In-Person Conversation'),
         ('web', 'Sumitted on Web Form'),
-    )
+    ]
     method = models.CharField(max_length=6, choices=METHOD_CHOICES)
 
     class Meta:
         ordering = ["-comment_datetime"]
 
+    def get_absolute_url(self):
+        return reverse('comment-detail', args=[str(self.id)])
+        
     def __str__(self):
         return '%s: %s' % (self.contact, self.subject)
     
