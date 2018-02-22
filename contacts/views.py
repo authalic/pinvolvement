@@ -1,14 +1,18 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
+from django.views.decorators.http import require_http_methods
 from .forms import SubjectForm
 from .models import Organization, Contact, Subject, Comment
 
 
 # Create your views here.
 
+@login_required
 def index(request):
     '''
     View function for the home page of site
@@ -38,38 +42,34 @@ def index(request):
 #   /templates/contacts/[modelname]_detail.html
 
 
-class ContactListView(generic.ListView):
+class ContactListView(LoginRequiredMixin, generic.ListView):
     model = Contact
     paginate_by = 10
 
 
-class OrganizationListView(generic.ListView):
+class OrganizationListView(LoginRequiredMixin, generic.ListView):
     model = Organization
 
 
-class SubjectListView(generic.ListView):
+class SubjectListView(LoginRequiredMixin, generic.ListView):
     model = Subject
     paginate_by = 10
 
 
-class CommentListView(generic.ListView):
+class CommentListView(LoginRequiredMixin, generic.ListView):
     model = Comment
     paginate_by = 20
 
 
-class ContactDetailView(generic.DetailView):
+class ContactDetailView(LoginRequiredMixin, generic.DetailView):
     model = Contact
 
 
-class OrganizationDetailView(generic.DetailView):
+class OrganizationDetailView(LoginRequiredMixin, generic.DetailView):
     model = Organization
 
 
-class SubjectDetailView(generic.DetailView):
-    model = Subject
-
-
-class CommentDetailView(generic.DetailView):
+class CommentDetailView(LoginRequiredMixin, generic.DetailView):
     model = Comment
 
 
@@ -83,66 +83,86 @@ class CommentDetailView(generic.DetailView):
 #       forms in an attractive way
 
 
-class ContactCreate(CreateView):
+class ContactCreate(LoginRequiredMixin, CreateView):
     model = Contact
     fields = '__all__'
 
 
-class ContactUpdate(UpdateView):
+class ContactUpdate(LoginRequiredMixin, UpdateView):
     model = Contact
     fields = '__all__'
 
 
-class ContactDelete(DeleteView):
+class ContactDelete(LoginRequiredMixin, DeleteView):
     model = Contact
     success_url = reverse_lazy('contacts')
 
 
-class CommentCreate(CreateView):
+class CommentCreate(LoginRequiredMixin, CreateView):
+    model = Comment
+    fields = '__all__'
+   
+
+class CommentUpdate(LoginRequiredMixin, UpdateView):
     model = Comment
     fields = '__all__'
 
 
-class CommentUpdate(UpdateView):
-    model = Comment
-    fields = '__all__'
-
-
-class CommentDelete(DeleteView):
+class CommentDelete(LoginRequiredMixin, DeleteView):
     model = Comment
     success_url = reverse_lazy('comments')
 
 
-class OrganizationCreate(CreateView):
+class OrganizationCreate(LoginRequiredMixin, CreateView):
     model = Organization
     fields = '__all__'
 
 
-class OrganizationUpdate(UpdateView):
+class OrganizationUpdate(LoginRequiredMixin, UpdateView):
     model = Organization
     fields = '__all__'
 
 
-class OrganizationDelete(DeleteView):
+class OrganizationDelete(LoginRequiredMixin, DeleteView):
     model = Organization
     success_url = reverse_lazy('organizations')
 
 
-# NOTE:
-# the Create and Update Subject forms require the Leaflet widget
-# and cannot be created as generic views
+class SubjectDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Subject
 
+
+class SubjectDelete(LoginRequiredMixin, DeleteView):
+    model = Subject
+    success_url = reverse_lazy('subjects')
+
+
+
+# NOTE:
+# the Create and Update Subject forms require the Leaflet widget and cannot be created as generic views
+
+@login_required
 def subject_update_view(request, pk):
 
     subject = get_object_or_404(Subject, pk=pk)
 
-    form = SubjectForm(instance=subject)
     template = 'contacts/subject_form.html'
 
+    if request.method == 'POST':
+
+        form = SubjectForm(request.POST, instance=subject)
+        
+        if form.is_valid():
+            form.save()
+
+            return redirect('subject-detail', pk=subject.pk)
+    else:
+        form = SubjectForm(instance=subject)
 
     return render(request, template, {'form': form})
 
 
+@login_required
 def subject_create_view(request):
     form = SubjectForm()
     template = 'contacts/subject_form.html'
@@ -165,10 +185,4 @@ def subject_create_view(request):
 
     return render(request, template, {'form': form})
 
-
-
-
-class SubjectDelete(DeleteView):
-    model = Subject
-    success_url = reverse_lazy('subjects')
 

@@ -13,23 +13,70 @@
 
 
 {% block content %}
-    <h3>Subject Detail</h1>
+    <h3>Subject Detail</h3>
 
-    <p>Summary: {{ subject.summary }}</p>
+    <p><b>Summary: </b>{{ subject.summary }}</p>
+    <p><b>Contact: </b>{{ subject.contact }}</p>
+    <p><b>Employee: </b>{{ subject.employee }}</p>
+    <p><b>Last Activity: </b>{{ subject.last_activity }}</p>
     <hr>
-    <p>Contact: {{ subject.contact }}</p>
-    <p>Start Date: {{ subject.initial_date }}</p>
-    <p>Last Activity: {{ subject.last_activity }}</p>
-    <div>
-        {% leaflet_map "subjectmap" callback="subjectmap_init" %}
-    </div>
+  
+
+    {# leaflet map gets injected here #}
+    {% leaflet_map "mapid" callback="window.map_init_basic" fitextent="False" %}
+
+        <!-- clicking the Add New Comment button should redirect users back to the Subject Detail page -->
+        <a class="btn btn-primary" href="{% url 'subject_update' subject.pk %}" role="button">Edit Details</a>
+        <a class="btn btn-primary" href="{% url 'comment_create' %}" role="button">Add New Comment</a>
+
+
+    <h3>Comment History</h3>
+    <!-- Create the back-and-forth comment structure here -->
+
+    {% for comment in subject.get_comments %}
+        {% if comment.is_incoming %}
+            <div class="card bg-light border-dark col-md-8 offset-md-0">
+                <div class="card-header">
+                    {{ comment.contact }}
+                </div>
+                <div class="card-body">
+                    <div class="card-subtitle">
+                        <a href="{% url 'comment-detail' comment.pk %}" class="card-link">{{ comment.timestamp }}</a>
+                    </div>
+                    <div class="card-text">
+                        {{ comment.commentxt }}
+                    </div>
+                </div>
+            </div>
+
+        {% else %}
+            <div class="card bg-light border-primary col-md-8 offset-md-4">
+                <div class="card-header">
+                    {{ comment.employee }}
+                </div>
+                <div class="card-body">
+                    <div class="card-subtitle">
+                        <a href="{% url 'comment-detail' comment.pk %}" class="card-link">{{ comment.timestamp }}</a>
+                    </div>
+                    <div class="card-text">
+                        {{ comment.commentxt }}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+
 
     <script>
-        function subjectmap_init(map, options) {
-            // use leaflet api here
+        // Leaflet widget setup
+        function map_init_basic(map, options) {
+
+            L.marker([{{ subject.lat }}, {{ subject.lon }}]).addTo(map)
+                .bindPopup('This can be customized');
+
+            map.flyTo([{{ subject.lat }}, {{ subject.lon }}], 16);
         }
     </script>
 
-    <a class="btn btn-default" href="{% url 'subject_update' subject.id %}" role="button">Edit</a>
 
 {% endblock %}

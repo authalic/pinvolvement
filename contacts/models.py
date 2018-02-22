@@ -84,7 +84,18 @@ class Subject(models.Model):
 
     def get_absolute_url(self):
         return reverse('subject-detail', args=[str(self.id)])
+    
+    def lon(self):
+        pointLocation = GEOSGeometry(self.coordinates)
+        return pointLocation[0]
 
+    def lat(self):
+        pointLocation = GEOSGeometry(self.coordinates)
+        return pointLocation[1]
+
+    def get_comments(self):
+        return Comment.objects.filter(subject=self.pk).order_by('timestamp')
+    
     def __str__(self):
         return self.summary
 
@@ -126,3 +137,18 @@ class Comment(models.Model):
     def __str__(self):
         return '%s: %s' % (self.contact, self.subject)
     
+    # def get_comments(self):
+    #     if self.subject:
+    #         return Subject.objects.filter(pk=self.subject.pk).order_by('-initial_date')
+    #     else:
+    #         return False
+
+
+
+    # helper function for styling the back-and-forth Comments in a Subject
+    def is_incoming(self):
+        if self.direction == 'in':
+            return True
+        else:
+            return False
+

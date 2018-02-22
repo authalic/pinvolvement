@@ -12,9 +12,10 @@
     <p>Organization: {{ contact.organization }}</p>
     <p>Organization Title: {{ contact.org_title }}</p>
     <hr>
-    <p>email: {{ contact.email }} phone: {{ contact.phone }}</p>
-    <p>address: {{ contact.address1 }} {{ contact.address2 }}</p>
-    <p>city: {{ contact.city }} state: {{ contact.state }} zip: {{ contact.zip }}</p>
+    <p>email: {{ contact.email }}</p>
+    <p>phone: {{ contact.phone }}</p>
+    <p>{{ contact.address1 }} {{ contact.address2 }}</p>
+    <p>{{ contact.city }}, {{ contact.state }} {{ contact.zip }}</p>
 
     <a class="btn btn-default" href="{% url 'contact_update' contact.pk %}" role="button">Edit</a>
 {% endblock %}
