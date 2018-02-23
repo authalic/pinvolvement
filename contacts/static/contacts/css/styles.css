@@ -1,10 +1,30 @@
 
-.leaflet-container {  /* all maps */
-    width:  600px;
-    height: 400px;
+/* 
+custom css
+served from the static folder 
+*/
+
+
+div .row {
+    margin-bottom: 12px;
 }
 
-#specialbigmap {
-    height: 800px;
+a.btn.btn-primary {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+div.card-header {
+    padding: 0.5rem;
+}
+
+div.card-body {
+
+    padding: 0 5px 10px;
+}
+a.timestamp {
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+    color: #444;
 }
 

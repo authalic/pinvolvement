@@ -101,7 +101,7 @@ class ContactDelete(LoginRequiredMixin, DeleteView):
 class CommentCreate(LoginRequiredMixin, CreateView):
     model = Comment
     fields = '__all__'
-   
+
 
 class CommentUpdate(LoginRequiredMixin, UpdateView):
     model = Comment

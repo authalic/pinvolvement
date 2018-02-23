@@ -3,23 +3,22 @@
 
 {% block loadleaflet %}{% endblock %}
 
-
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap 4.0 CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 
     {% block leafletheaders %}{% endblock %}
 
     {% block title %}<title>Document</title>{% endblock %}
-    <!-- add css file from static files 
+    <!-- add css file from static files -->
+    
     {% load static %}
     <link rel='stylesheet' href='{% static "contacts/css/styles.css" %}' >
-    -->
+    
 
     {% block headerstyle %}{% endblock %}
 
