@@ -29,6 +29,10 @@ Additions to the project
 
 11. Remove some of the Leaflet.Draw tools from the Add New Subject tools
 
+12.  In the main map popups:
+    - create a way to show how the initial contact came in
+    - Method, direction, employee
+
 
 
 

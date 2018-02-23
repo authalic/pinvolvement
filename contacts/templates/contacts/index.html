@@ -24,17 +24,14 @@
 {% block content %}
 
     <div id="mapid"></div>
+         
+        {# <script src='{% static "contacts/js/frontpage_map.js" %}' ></script> #}
+        {# template variables don't seem to work when they're imported as part of a js script #}
 
-    {# <script src='{% static "contacts/js/frontpage_map.js" %}' ></script> #}
-
-
-    <script>  // move this to a separate file, when it gets working.
-              // the mixture of Django and Javascript is still not clear
-              // clearer
-              // access context variables here, using form: {{ num_comment }}
+    <script>
 
         var mymap = L.map('mapid')
-                     .setView([40.74, -111.88], 12);
+        .setView([40.74, -111.88], 12);
 
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -49,12 +46,19 @@
 
             var marker = L.marker([ {{ subject.lat }}, {{ subject.lon }} ]).addTo(mymap);
 
-            subjectURL = "{% url 'subject-detail' subject.pk %}" 
+            subjectURL = "{% url 'subject-detail' subject.pk %}"
 
-            marker.bindPopup("<b>{{ subject.contact }}</b>" + "<br>" + "<a href='" + subjectURL + "'>{{ subject.summary }}</a>" + "<br><br>" + "Last Activity: {{ subject.last_activity }}");
+            marker.bindPopup("<h5>{{ subject.contact }}</h5>"
+                            + "<a href='" + subjectURL + "'>{{ subject.summary }}</a><br><br>"
+                            + "{{ subject.get_comments.count }} comments on this subject<br>"
+                            + "Subject Created: {{ subject.initial_date }}<br>" 
+                            + "Last Activity: {{ subject.last_activity }}"
+                            );
+            
+            marker.bindTooltip("{{ subject.contact }} <br> {{ subject.summary }} ")
 
         {% endfor %}
-        
+
     </script>
 
 {% endblock %}
