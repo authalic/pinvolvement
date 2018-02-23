@@ -28,3 +28,11 @@ a.timestamp {
     color: #444;
 }
 
+.leaflet-container {  /* Default size of all maps */
+    width:  100%;
+    height: 600px;
+}
+
+div #subject_mapid {  /* re-styles the map window on the Subject Detail page */
+    height: 400px;
+}

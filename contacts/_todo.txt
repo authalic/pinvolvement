@@ -1,0 +1,39 @@
+Additions to the project
+
+1.  When user clicks "Add New Comment" on the Comment History page, make a small form appear on that page to enter new Comment, instead of redirecting to a New Comment form
+
+2.  Show all existing Subjects on front-page map
+    -  Popups will contain Description, Date, Contact, and link to full Subject page.
+    -  Tooltips will show the Contact name, and possibly the summary on a second line
+
+3.  Work on the List templates
+    -  Style them all alike
+    -  Create links to individual item detail pages within each list
+
+4.  Figure out how to upload files on the New Comment page
+    -  Add a thumbnail of that image/file to the comment's text message box in the Comment History stream
+
+5.  Create a way to Add New Event from the main map
+
+6.  Add widgets to the Leaflet maps
+    -  Basemap toggle
+    -  Turn layers on/off (design layers, parcels, etc.)
+
+7.  When a user with Admin rights logs in, show a link to the Admin page in the top-right, next to Logout
+
+8.  Make a little icon appear in the title bar of each Comment window in the History, to indicate the method of contact (email, phone, etc )
+
+9.  Can each View remember its state?  If you switch from main map to Subjects, then back to main map, can it preserve its extent and options?
+
+10. Add a "Home" button to the main map.
+
+11. Remove some of the Leaflet.Draw tools from the Add New Subject tools
+
+
+
+
+
+Look into
+
+*  Django crispy-forms  http://django-crispy-forms.readthedocs.io/en/latest/
+

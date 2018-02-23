@@ -17,6 +17,10 @@ def index(request):
     '''
     View function for the home page of site
     '''
+    # Send all of the current Subject points to the main page
+
+    subjects = Subject.objects.all()
+
 
     # Generate counts of some of the main objects
     num_org = Organization.objects.count()
@@ -28,6 +32,7 @@ def index(request):
         request,
         'contacts/index.html',
         context={
+            'subjects': subjects,
             'num_org': num_org,
             'num_contact': num_contact,
             'num_subject': num_subject,

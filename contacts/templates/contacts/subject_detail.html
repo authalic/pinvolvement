@@ -23,7 +23,7 @@
   
 
     {# leaflet map gets injected here #}
-    {% leaflet_map "mapid" callback="window.map_init_basic" fitextent="False" %}
+    {% leaflet_map "subject_mapid" callback="window.map_init_basic" fitextent="False" %}
 
         <!-- clicking the Add New Comment button should redirect users back to the Subject Detail page -->
         <a class="btn btn-primary" href="{% url 'subject_update' subject.pk %}" role="button">Edit Details</a>
@@ -75,6 +75,5 @@
             map.flyTo([{{ subject.lat }}, {{ subject.lon }}], 16);
         }
     </script>
-
 
 {% endblock %}
