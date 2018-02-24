@@ -71,9 +71,33 @@
         function map_init_basic(map, options) {
 
             L.marker([{{ subject.lat }}, {{ subject.lon }}]).addTo(map)
-                .bindPopup('This can be customized');
+                .bindPopup('Subject Location');
 
             map.flyTo([{{ subject.lat }}, {{ subject.lon }}], 16);
+        
+
+            {% for subpoint in subjects %}
+
+                {% if not subpoint.pk == subject.pk %}
+                    // this doesn't work
+                    // need to pass the entire set of subjects to this template in the context settings
+
+                    var marker = L.marker([ {{ subpoint.lat }}, {{ subpoint.lon }} ]).addTo(map);
+
+                    subjectURL = "{% url 'subject-detail' subject.pk %}"
+
+                    marker.bindPopup("<h5>{{ subject.contact }}</h5>"
+                                    + "<a href='" + subjectURL + "'>{{ subject.summary }}</a><br><br>"
+                                    + "{{ subject.get_comments.count }} comments on this subject<br>"
+                                    + "Subject Created: {{ subject.initial_date }}<br>" 
+                                    + "Last Activity: {{ subject.last_activity }}"
+                                    );
+                    
+                    marker.bindTooltip("{{ subject.contact }} <br> {{ subject.summary }} ")
+
+                {% endif %}
+
+            {% endfor %}
         }
     </script>
 

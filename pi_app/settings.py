@@ -137,6 +137,9 @@ USE_TZ = True
 LOGIN_REDIRECT_URL = '/'
 
 # Leaflet Configuration (set the initial zoom and center point)
+# This mainly seems to affect the maps on the input forms, such as the Subject Create template
+# Main Map, and Subject Detail map, are configured in the CSS
+
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (40.7, -111.9),
     'DEFAULT_ZOOM': 11,

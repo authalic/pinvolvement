@@ -30,21 +30,32 @@
 
     <script>
 
-        var mymap = L.map('mapid')
-        .setView([40.74, -111.88], 12);
+        var mymap = L.map('mapid', {
+            center: [40.74, -111.88],
+            zoom: 12,
+            minZoom: 10,
+            maxBounds: [
+                [ 40.9, -112.0 ],
+                [ 40.6, -111.7 ]
+            ],
+            maxBoundsViscosity: 0.5,
+        });
 
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 20,
         id: 'mapbox.streets',
-        accessToken: 'pk.eyJ1IjoiYXV0aGFsaWMiLCJhIjoiSHppSDJlWSJ9.h8QdzKDNKE1p_XDuzIBoSg'
+        accessToken: 'pk.eyJ1IjoiYXV0aGFsaWMiLCJhIjoiSHppSDJlWSJ9.h8QdzKDNKE1p_XDuzIBoSg',
         }).addTo(mymap);
 
-        // go to town with Django context variables
 
+
+        // go to town with Django template tags and context variables
         {% for subject in subjects %}
 
-            var marker = L.marker([ {{ subject.lat }}, {{ subject.lon }} ]).addTo(mymap);
+            var marker = L.marker([ {{ subject.lat }}, {{ subject.lon }} ], { 
+                           riseOnHover: true,
+                        });
 
             subjectURL = "{% url 'subject-detail' subject.pk %}"
 
@@ -54,11 +65,11 @@
                             + "Subject Created: {{ subject.initial_date }}<br>" 
                             + "Last Activity: {{ subject.last_activity }}"
                             );
-            
             marker.bindTooltip("{{ subject.contact }} <br> {{ subject.summary }} ")
-
+            marker.addTo(mymap);
         {% endfor %}
-
     </script>
 
+    <a class="btn btn-primary" href="{% url 'subject_create' %}" role="button">Add New Subject</a>
+    
 {% endblock %}

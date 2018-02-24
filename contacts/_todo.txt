@@ -2,6 +2,8 @@ Additions to the project
 
 1.  When user clicks "Add New Comment" on the Comment History page, make a small form appear on that page to enter new Comment, instead of redirecting to a New Comment form
 
+1a. After a new comment is created, go to the Subject Detail page, not the Comment Detail
+
 2.  Show all existing Subjects on front-page map
     -  Popups will contain Description, Date, Contact, and link to full Subject page.
     -  Tooltips will show the Contact name, and possibly the summary on a second line
@@ -33,11 +35,25 @@ Additions to the project
     - create a way to show how the initial contact came in
     - Method, direction, employee
 
+13. Clean up the Logged Out page.
+    - make it look like the Login page
+    - Only shows up if you log out from the Admin site
 
+14. REWRITE the Create Subject form
+    - copy the form from the previous public comment app, that uses a Leaflet map and form fields
+    - Send the coordinates as a hidden fields
+    - The default Leaflet form widget is ugly and hard to style
 
+15. Incorporate the Outreach Log as a second app
+    - based on the job queue project that was poo-poo'd
+
+16. Add offline capabilities
+
+17. Add geolocate capabilties for mobile
 
 
 Look into
 
 *  Django crispy-forms  http://django-crispy-forms.readthedocs.io/en/latest/
 
+*  Can tool tips be styled?  The fonts could look better.

@@ -183,8 +183,6 @@ def subject_create_view(request):
             # redirect to a new URL
             return HttpResponseRedirect(reverse('subjects'))
 
-    # if request is GET or anything else, create a blank form
-    
     else:
         print('Error, form invalid') #testing purposes 
 
