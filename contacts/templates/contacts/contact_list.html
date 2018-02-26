@@ -7,15 +7,31 @@
     <h3>Contact List</h1>
 
     {% if contact_list %}
-        <ul>
+        <table style="width: 100%">
+            <tr>
+                <th style="width: 30%;">Contact</th><th style="width: 30%;">Address</th><th style="width: 20%;">email</th><th style="width: 10%;">Phone</th>
+            </tr>
             {% for contact in contact_list %}
-                <li>
-                    <a href="{% url 'contact-detail' contact.pk %}">{{ contact.first_name }} {{ contact.last_name }}</a>
-                </li>
+            <tr>
+                <td>
+                    <a href="{% url 'contact-detail' contact.pk %}"><b>{{ contact.first_name }} {{ contact.last_name }}</b></a>
+                </td>
+                <td>
+                    {{ contact.address1 }} {{ contact.address2 }}
+                </td>
+                <td>
+                    {{ contact.email }}
+                </td>
+                <td>
+                    {{ contact.phone }}
+                </td>
+            </tr>
             {% endfor %}
-        </ul>
+        </table>
     {% else %}
         <p>No contacts in database</p>
     {% endif %}
-    <a class="btn btn-default" href="{% url 'contact_create' %}" role="button">Add New</a>
+
+    <a class="btn btn-primary" href="{% url 'contact_create' %}" role="button">Add New</a>
+
 {% endblock %}

@@ -7,15 +7,31 @@
     <h3>Subject List</h1>
 
     {% if subject_list %}
-        <ul>
-            {% for subj in subject_list %}
-                <li>
-                    <a href="{% url 'subject-detail' subj.pk %}"><b>{{ subj.summary }}</b></a> {{ subj.contact }} {{ subj.initial_date }}
-                </li>
-            {% endfor %}
-        </ul>
+
+    <table  style="width: 100%">
+        <tr>
+            <th style="width: 50%;">Summary</th><th style="width: 20%;">Contact</th><th style="width: 10%;">Employee</th><th style="width: 20%;">Start Date</th>
+        </tr>
+        {% for subj in subject_list %}
+        <tr>
+            <td>
+                <a href="{% url 'subject-detail' subj.pk %}"><b>{{ subj.summary }}</b></a>
+            </td>
+            <td>
+                <a href="{% url 'contact-detail' subj.contact.pk %}"><b>{{ subj.contact }}</b></a>
+            </td>
+            <td>
+                {{ subj.employee }}
+            </td>
+            <td>
+                {{ subj.initial_date }}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
     {% else %}
         <p>No subjects in database</p>
     {% endif %}
-    <a class="btn btn-default" href="{% url 'subject_create' %}" role="button">Add New</a>
+    
+    <a class="btn btn-primary" href="{% url 'subject_create' %}" role="button">Add New</a>
 {% endblock %}

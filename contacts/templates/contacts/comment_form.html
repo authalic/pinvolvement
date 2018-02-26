@@ -1,11 +1,64 @@
 {% extends "contacts/base.html" %}
 
+
+
+
 {% block content %}
 
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
-    {{ form.as_p }}
+    <!-- render form fields individually to allow Bootstrap styling -->
+    
+    {{ form.non_field_errors }}
+
+    <div class="form-group">
+        {{ form.contact.errors }}
+        <label for="{{ form.contact.id_for_label }}">Contact</label>
+        {{ form.contact }}
+    </div>
+
+    <div class="form-group">
+        {{ form.employee.errors }}
+        <label for="{{ form.employee.id_for_label }}">Employee</label>
+        {{ form.employee }}
+     </div>
+
+    <div class="form-group">
+        {{ form.direction.errors }}
+        <label for="{{ form.direction.id_for_label }}">Direction of Commmunitcation</label>
+        {{ form.direction }}
+    </div>
+
+    <div class="form-group">
+        {{ form.method.errors }}
+        <label for="{{ form.method.id_for_label }}">Method of Commmunitcation</label>
+        {{ form.method }}
+    </div>
+
+    <div class="form-group">
+        {{ form.comment_datetime.errors }}
+        <label for="{{ form.comment_datetime.id_for_label }}">Date and Time of Commmunitcation</label>
+        {{ form.comment_datetime }}
+    </div>
+
+    <div class="form-group">
+        {{ form.subject.errors }}
+        <label for="{{ form.subject.id_for_label }}">Subject</label>
+        {{ form.subject }}
+    </div>
+
+    <div class="form-group">
+        {{ form.commentxt.errors }}
+        <label for="{{ form.commentxt.id_for_label }}">Summary Text</label>
+        {{ form.commentxt }}
+    </div>
+
+    <div class="form-group">
+        {{ form.attachment.errors }}
+        <label for="{{ form.attachment.id_for_label }}">Attachment</label>
+        {{ form.attachment }}
+    </div>
 
     <input type="submit" value="Submit">
     <input action="action" onclick="window.history.go(-1); return false;" type="button" value="Cancel">

@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_http_methods
-from .forms import SubjectForm
+from .forms import SubjectForm, CommentForm
 from .models import Organization, Contact, Subject, Comment
 
 
@@ -39,7 +39,6 @@ def index(request):
             'num_comment': num_comment,
         }
     )
-
 
 # Generic CBVs
 # templates are set by default in the CBVs at: 
@@ -145,6 +144,7 @@ class SubjectDelete(LoginRequiredMixin, DeleteView):
 
 # NOTE:
 # the Create and Update Subject forms require the Leaflet widget and cannot be created as generic views
+# the Create and Update Comment forms require more Bootstrap styling than generic views
 
 @login_required
 def subject_update_view(request, pk):
@@ -189,3 +189,43 @@ def subject_create_view(request):
     return render(request, template, {'form': form})
 
 
+@login_required
+def comment_update_view(request, pk):
+
+    comment = get_object_or_404(Comment, pk=pk)
+
+    template = 'contacts/comment_form.html'
+
+    if request.method == 'POST':
+
+        form = CommentForm(request.POST, instance=comment)
+        
+        if form.is_valid():
+            form.save()
+
+            return redirect('comment-detail', pk=comment.pk)
+    else:
+        form = CommentForm(instance=comment)
+
+    return render(request, template, {'form': form})
+
+
+def comment_create_view(request):
+    form = CommentForm()
+    template = 'contacts/comment_form.html'
+
+    if request.method == 'POST':
+
+        form = CommentForm(request.POST)
+
+        # check whether it's valid
+        if form.is_valid():
+            form.save(commit=True)
+
+            # redirect to a new URL
+            return HttpResponseRedirect(reverse('comments'))
+
+    else:
+        print('Error, form invalid') #testing purposes 
+
+    return render(request, template, {'form': form})

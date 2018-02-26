@@ -4,18 +4,19 @@
 
 
 {% block content %}
-    <h3>Contact Detail</h1>
-
-    <p>{{ contact.first_name }} {{ contact.last_name }}</p>
-    <p>Note: {{ contact.textnote }}</p>
+    <h3>{{ contact.first_name }} {{ contact.last_name }}</h3>
     <hr>
-    <p>Organization: {{ contact.organization }}</p>
-    <p>Organization Title: {{ contact.org_title }}</p>
+    <p><b>Note:</b> {{ contact.textnote }}</p>
     <hr>
-    <p>email: {{ contact.email }}</p>
-    <p>phone: {{ contact.phone }}</p>
+    <p><b>Organization:</b> <a href="{% url 'org-detail' contact.organization.pk %}"> {{ contact.organization }}</a></p>
+    <p><b>Organization Title:</b> {{ contact.org_title }}</p>
+    <hr>
+    <p><b>Contact information</b></p>
     <p>{{ contact.address1 }} {{ contact.address2 }}</p>
     <p>{{ contact.city }}, {{ contact.state }} {{ contact.zip }}</p>
+    <p><b>email:</b> {{ contact.email }}</p>
+    <p><b>phone:</b> {{ contact.phone }}</p>
 
-    <a class="btn btn-default" href="{% url 'contact_update' contact.pk %}" role="button">Edit</a>
+    <a class="btn btn-primary" href="{% url 'contact_update' contact.pk %}" role="button">Edit</a>
+
 {% endblock %}

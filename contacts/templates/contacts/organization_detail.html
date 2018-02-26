@@ -4,12 +4,10 @@
 
 
 {% block content %}
-    <h3>Organization Detail</h1>
-
-    <p>{{ organization.org_name }}</p>
+    <h3>{{ organization.org_name }}</h3>
     <p>{{ organization.org_address1 }} {{ organization.org_address2 }}</p>
     <p>{{ organization.org_city }} {{ organication.org_state }} {{ organization.org_zipcode }}</p>
     
-    <a class="btn btn-default" href="{% url 'organization_update' organization.pk %}" role="button">Edit</a>
+    <a class="btn btn-primary" href="{% url 'organization_update' organization.pk %}" role="button">Edit</a>
 
 {% endblock %}

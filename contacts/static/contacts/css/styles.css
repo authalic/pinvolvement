@@ -36,3 +36,9 @@ a.timestamp {
 div #subject_mapid {  /* re-styles the map window on the Subject Detail page */
     height: 400px;
 }
+
+div.glyph {
+    font-size: 0.8rem;
+    font-weight: bold;
+    float: right;
+}

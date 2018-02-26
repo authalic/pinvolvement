@@ -15,6 +15,6 @@
     <p>{{ comment.commentxt }}</p>
     <p>attachments: {{ comment.attachment }}</p>
 
-    <a class="btn btn-default" href="{% url 'comment_update' comment.pk %}" role="button">Edit</a>
+    <a class="btn btn-primary" href="{% url 'comment_update' comment.pk %}" role="button">Edit</a>
 
 {% endblock %}

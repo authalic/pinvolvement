@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'crispy_forms',
     'leaflet',
     'contacts',
 ]
@@ -145,3 +146,5 @@ LEAFLET_CONFIG = {
     'DEFAULT_ZOOM': 11,
     'MIN_ZOOM': 4,
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

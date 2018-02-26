@@ -13,23 +13,19 @@
 
 
 {% block content %}
-    <h3>Subject Detail</h3>
-
-    <p><b>Summary: </b>{{ subject.summary }}</p>
-    <p><b>Contact: </b>{{ subject.contact }}</p>
+    <h3>Subject: </b>{{ subject.summary }}</h3>
+    <p><b>Contact: </b><a href="{% url 'contact-detail' subject.contact.pk %}"><b>{{ subject.contact }}</b></a></p>
     <p><b>Employee: </b>{{ subject.employee }}</p>
     <p><b>Subject Created: </b>{{ subject.initial_date }}</p>
     <p><b>Last Activity: </b>{{ subject.last_activity }}</p>
     <hr>
   
-
     {# leaflet map gets injected here #}
     {% leaflet_map "subject_mapid" callback="window.map_init_basic" fitextent="False" %}
 
         <!-- clicking the Add New Comment button should redirect users back to the Subject Detail page -->
-        <a class="btn btn-primary" href="{% url 'subject_update' subject.pk %}" role="button">Edit Details</a>
+        <a class="btn btn-primary" href="{% url 'subject_update' subject.pk %}" role="button">Edit</a>
         <a class="btn btn-primary" href="{% url 'comment_create' %}" role="button">Add New Comment</a>
-
 
     <h3>Comment History</h3>
     <!-- Create the back-and-forth comment structure here -->
@@ -41,7 +37,7 @@
             <div class="row">
                 <div class="col-sm-8">
                     <div class="card bg-light border border-secondary">
-                        <div class="card-header">{{ comment.contact }}</div>
+                        <div class="card-header">{{ comment.contact }} <div class="glyph">{{ comment.method }}</div></div>
                         <div class="card-body">
                             <div class="card-title"><a href="{% url 'comment-detail' comment.pk %}" class="timestamp">{{ comment.timestamp }}</a></div>
                             <p class="card-text">{{ comment.commentxt }}</p>
@@ -53,7 +49,7 @@
             <div class="row">
                 <div class="col-sm-8 offset-sm-4">
                     <div class="card bg-light border border-primary">
-                        <div class="card-header bg-primary text-white">{{ comment.employee }}</div>
+                        <div class="card-header bg-primary text-white">{{ comment.employee.first_name }} {{ comment.employee.last_name }}<div class="glyph">{{ comment.method }}</div></div>
                         <div class="card-body">
                             <div class="card-title"><a href="{% url 'comment-detail' comment.pk %}"  class="timestamp">{{ comment.timestamp }}</a></div>
                             <p class="card-text">{{ comment.commentxt }}</p>

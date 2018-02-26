@@ -7,15 +7,29 @@
     <h3>Organization List</h1>
 
     {% if organization_list %}
-        <ul>
+        <table style="width: 100%">
+            <tr>
+                <th style="width: 50%;">Organization</th>
+                <th style="width: 30%;">Address</th>
+                <th style="width: 20%;">City</th>
+            </tr>
             {% for org in organization_list %}
-                <li>
-                    <a href="{% url 'org-detail' org.pk %}"><b>{{ org.org_name }}</b></a> {{ org.address_1 }}, {{ org.org_city }}
-                </li>
+            <tr>
+                <td>
+                    <a href="{% url 'org-detail' org.pk %}"><b>{{ org.org_name }}</b></a>
+                </td>
+                <td>
+                    {{ org.org_address1 }} {{ org.org_address2 }}
+                </td>
+                <td>
+                    {{ org.org_city}}
+                </td>
+            </tr>
             {% endfor %}
-        </ul>
-        {% else %}
-        <p>No organizations in database</p>
-        {% endif %}
-        <a class="btn btn-default" href="{% url 'organization_create' %}" role="button">Add New</a>
+        </table>
+    {% else %}
+    <p>No organizations in database</p>
+    {% endif %}
+
+    <a class="btn btn-primary" href="{% url 'organization_create' %}" role="button">Add New</a>
 {% endblock %}

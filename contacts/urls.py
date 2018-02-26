@@ -19,15 +19,20 @@ urlpatterns = [
 
     path('comments/', views.CommentListView.as_view(), name='comments'),
     path('comment/<uuid:pk>', views.CommentDetailView.as_view(), name='comment-detail'),
-    path('comment/create', views.CommentCreate.as_view(), name='comment_create'), 
-    path('comment/<uuid:pk>/update', views.CommentUpdate.as_view(), name='comment_update'),
     path('comment/<uuid:pk>/delete', views.CommentDelete.as_view(), name='comment_delete'),
+
+    # use view functions to create or update new Comment objects using Bootstrap
+    path('comment/create', views.comment_create_view, name='comment_create'), 
+    path('comment/<uuid:pk>/update', views.comment_update_view, name='comment_update'),
+
 
     path('subjects/', views.SubjectListView.as_view(), name='subjects'),
     path('subject/<uuid:pk>', views.SubjectDetailView.as_view(), name='subject-detail'),
+    
     # use view functions to create or update new Subject objects using Leaflet widget
     path('subject/create', views.subject_create_view, name='subject_create'),
     path('subject/<uuid:pk>/update', views.subject_update_view, name='subject_update'),
+
     # use the generic view to delete
     path('subject/<uuid:pk>/delete', views.SubjectDelete.as_view(), name='subject_delete'),
 ]
