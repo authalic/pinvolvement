@@ -31,6 +31,7 @@
     <!-- Create the back-and-forth comment structure here -->
 
     <div class="container">
+        {% if subject.get_comments %}
 
         {% for comment in subject.get_comments %}
             {% if comment.is_incoming %}
@@ -59,6 +60,12 @@
             </div>
             {% endif %}
         {% endfor %}
+
+        {% else %}
+            <div class="row">
+                <p>No comments attached to this incident</p>
+            </div>
+        {% endif %}
 
     </div>  
 

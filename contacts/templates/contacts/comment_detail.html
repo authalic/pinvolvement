@@ -6,12 +6,12 @@
 {% block content %}
     <h3>Comment Detail</h1>
 
-    <p>Subject: {{ comment.subject }}</p>
-    <p>Contact: {{ comment.contact }}</p>
-    <p>Direction of Comment: {{ comment.direction }}</p>
-    <p>Employee: {{ comment.employee }}</p>
-    <p>Method of Contact: {{ comment.method }}</p>
-    <p>Summary of comment:</p>
+    <p><b>Subject: </b><a href="{% url 'subject-detail' comment.subject.pk %}">{{ comment.subject }}</a></p>
+    <p><b>Contact: </b><a href="{% url 'contact-detail' comment.contact.pk %}">{{ comment.contact }}</a></p>
+    <p><b>Direction of Comment: </b>{{ comment.direction }}</p>
+    <p><b>Employee: </b>{{ comment.employee }}</p>
+    <p><b>Method of Contact: </b>{{ comment.method }}</p>
+    <p><b>Summary of comment:</b></p>
     <p>{{ comment.commentxt }}</p>
     <p>attachments: {{ comment.attachment }}</p>
 

@@ -31,7 +31,7 @@
     <script>
 
         var mymap = L.map('mapid', {
-            center: [40.80, -111.88],
+            center: [40.755, -111.88],
             zoom: 12,
             minZoom: 10,
             maxBounds: [
@@ -61,7 +61,7 @@
 
             marker.bindPopup("<h5>{{ subject.contact }}</h5>"
                             + "<a href='" + subjectURL + "'>Subject: {{ subject.summary }}</a><br><br>"
-                            + "{{ subject.get_comments.count }} comments on this subject<br>"
+                            + "{{ subject.get_comments.count }} comment{{ subject.get_comments.count |pluralize}} on this subject<br>"
                             + "Subject Created: {{ subject.initial_date }}<br>" 
                             + "Last Activity: {{ subject.last_activity }}"
                             );
