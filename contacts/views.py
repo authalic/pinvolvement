@@ -62,7 +62,7 @@ class SubjectListView(LoginRequiredMixin, generic.ListView):
 
 class CommentListView(LoginRequiredMixin, generic.ListView):
     model = Comment
-    paginate_by = 20
+    paginate_by = 10
 
 
 class ContactDetailView(LoginRequiredMixin, generic.DetailView):
@@ -184,7 +184,7 @@ def subject_create_view(request):
             return HttpResponseRedirect(reverse('subjects'))
 
     else:
-        print('Error, form invalid') #testing purposes 
+        print('Render empty unbound form') #testing purposes
 
     return render(request, template, {'form': form})
 
@@ -210,6 +210,7 @@ def comment_update_view(request, pk):
     return render(request, template, {'form': form})
 
 
+@login_required
 def comment_create_view(request):
     form = CommentForm()
     template = 'contacts/comment_form.html'
@@ -226,6 +227,6 @@ def comment_create_view(request):
             return HttpResponseRedirect(reverse('comments'))
 
     else:
-        print('Error, form invalid') #testing purposes 
+        print('Render empty unbound form') #testing purposes 
 
     return render(request, template, {'form': form})
