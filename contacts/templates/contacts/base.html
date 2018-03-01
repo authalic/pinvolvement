@@ -56,6 +56,11 @@
         <ul class="nav justify-content-end">
             {% if user.is_authenticated %}
               <li class="navbar-text">User: {{ user.first_name }}</li>
+              {% if user.is_superuser %}
+                <li>
+                  <a class="nav-link" href="{% url 'admin:index'%}">Admin</a>
+                </li>  
+              {% endif %}
               <li>
                 <a class="nav-link" href="{% url 'logout'%}?next={{request.path}}">Logout</a>
               </li>   

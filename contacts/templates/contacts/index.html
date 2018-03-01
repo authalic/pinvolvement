@@ -70,6 +70,9 @@
         {% endfor %}
     </script>
 
+    {% if user.is_staff %}
     <a class="btn btn-primary" href="{% url 'subject_create' %}" role="button">Add New Subject</a>
+    {% endif %}
+
     
 {% endblock %}

@@ -26,7 +26,10 @@ class Organization(models.Model):
 
     class Meta:
             ordering = ["org_name"]
-            
+
+    def get_members(self):
+        return Contact.objects.filter(organization=self.pk).order_by('last_name', 'first_name')
+
     def get_absolute_url(self):
         return reverse('org-detail', args=[str(self.id)])
     
@@ -57,6 +60,9 @@ class Contact(models.Model):
 
     class Meta:
         ordering = ["last_name", "first_name"]
+
+    def get_comments(self):
+        return Comment.objects.filter(contact=self.pk).order_by('-comment_datetime')
     
     def get_absolute_url(self):
         return reverse('contact-detail', args=[str(self.id)])

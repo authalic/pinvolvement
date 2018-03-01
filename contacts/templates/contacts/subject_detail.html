@@ -23,9 +23,12 @@
     {# leaflet map gets injected here #}
     {% leaflet_map "subject_mapid" callback="window.map_init_basic" fitextent="False" %}
 
+    {% if user.is_staff %}
+
         <!-- clicking the Add New Comment button should redirect users back to the Subject Detail page -->
         <a class="btn btn-primary" href="{% url 'subject_update' subject.pk %}" role="button">Edit</a>
         <a class="btn btn-primary" href="{% url 'comment_create' %}" role="button">Add New Comment</a>
+    {% endif %}
 
     <h3>Comment History</h3>
     <!-- Create the back-and-forth comment structure here -->

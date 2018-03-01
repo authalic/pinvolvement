@@ -1,1 +1,6 @@
 media/contacts/contacts/Transam.png
+*.pyc
+*.pyo
+lib
+lib64
+bin

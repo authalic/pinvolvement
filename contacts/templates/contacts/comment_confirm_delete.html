@@ -2,13 +2,21 @@
 
 {% block content %}
 
-<h1>Delete Author</h1>
+    {% if user.is_staff %}
 
-<p>Are you sure you want to delete the comment: {{ comment }}?</p>
+    <h1>Delete Author</h1>
 
-<form action="" method="POST">
-  {% csrf_token %}
-  <input type="submit" action="" value="Yes, delete." />
-</form>
+    <p>Are you sure you want to delete the comment: {{ comment }}?</p>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <input type="submit" action="" value="Yes, delete." />
+    </form>
+
+    {% else %}
+
+        <p>You do not have permission to delete authors</p>
+
+    {% endif %}
 
 {% endblock %}

@@ -32,6 +32,10 @@
         <p>No contacts in database</p>
     {% endif %}
 
+    {% if user.is_staff %}
+
     <a class="btn btn-primary" href="{% url 'contact_create' %}" role="button">Add New</a>
+
+    {% endif %}
 
 {% endblock %}

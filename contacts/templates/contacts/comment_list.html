@@ -35,6 +35,10 @@
         <p>No comments in database</p>
     {% endif %}
 
+    {% if user.is_staff %}
+
     <a class="btn btn-primary" href="{% url 'comment_create' %}" role="button">Add New</a>
+
+    {% endif %}
 
 {% endblock %}

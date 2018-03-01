@@ -13,8 +13,12 @@
     <p><b>Method of Contact: </b>{{ comment.method }}</p>
     <p><b>Summary of comment:</b></p>
     <p>{{ comment.commentxt }}</p>
-    <p>attachments: {{ comment.attachment }}</p>
+    <p><b>attachments: </b>{{ comment.attachment }}</p>
 
-    <a class="btn btn-primary" href="{% url 'comment_update' comment.pk %}" role="button">Edit</a>
+    {% if user.is_staff %}
+
+        <a class="btn btn-primary" href="{% url 'comment_update' comment.pk %}" role="button">Edit</a>
+
+    {% endif %}
 
 {% endblock %}
