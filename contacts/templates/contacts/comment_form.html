@@ -9,61 +9,66 @@
     
     {{ form.non_field_errors }}
 
-    <div class="form-group">
-        {{ form.contact.errors }}
-        <label for="{{ form.contact.id_for_label }}">Contact</label>
-        {{ form.contact }}
+    <div class="form-row">
+        <div class="col-md-6">
+            {{ form.contact.errors }}
+            <label for="{{ form.contact.id_for_label }}"><b>Contact</b></label>
+            {{ form.contact }}
+        </div>
+        <div class="col-md-6">
+            {{ form.employee.errors }}
+            <label for="{{ form.employee.id_for_label }}"><b>Employee</b></label>
+            {{ form.employee }}
+        </div>
     </div>
 
-    <div class="form-group">
-        {{ form.employee.errors }}
-        <label for="{{ form.employee.id_for_label }}">Employee</label>
-        {{ form.employee }}
-     </div>
+    <div class="form-row">
+        <div class="col-md-4">
+            {{ form.direction.errors }}
+            <label for="{{ form.direction.id_for_label }}"><b>Direction of Commmunication</b></label>
+            {{ form.direction }}
+        </div>
+        <div class="col-md-4">
+            {{ form.method.errors }}
+            <label for="{{ form.method.id_for_label }}"><b>Method of Commmunication</b></label>
+            {{ form.method }}
+        </div>
+        <div class="col-md-4">
+            {{ form.comment_datetime.errors }}
+            <label for="{{ form.comment_datetime.id_for_label }}"><b>Date and Time of Commmunication</b></label>
+            {{ form.comment_datetime }}
+        </div>
 
-    <div class="form-group">
-        {{ form.direction.errors }}
-        <label for="{{ form.direction.id_for_label }}">Direction of Commmunitcation</label>
-        {{ form.direction }}
     </div>
 
-    <div class="form-group">
-        {{ form.method.errors }}
-        <label for="{{ form.method.id_for_label }}">Method of Commmunitcation</label>
-        {{ form.method }}
+    <div class="form-row">
+        <div class="col-md-6">
+            {{ form.subject.errors }}
+            <label for="{{ form.subject.id_for_label }}"><b>Subject</b></label>
+            {{ form.subject }}
+        </div>
     </div>
 
-    <div class="form-group">
-        {{ form.comment_datetime.errors }}
-        <label for="{{ form.comment_datetime.id_for_label }}">Date and Time of Commmunitcation</label>
-        {{ form.comment_datetime }}
+    <div class="form-row">
+        <div class="col-md-12">
+            {{ form.commentxt.errors }}
+            <label for="{{ form.commentxt.id_for_label }}"><b>Comment</b></label>
+            {{ form.commentxt }}
+        </div>
     </div>
 
-    <div class="form-group">
-        {{ form.subject.errors }}
-        <label for="{{ form.subject.id_for_label }}">Subject</label>
-        {{ form.subject }}
+    <div class="form-row" id="commentInput">
+        <div class="col-md-6">
+            {{ form.attachment.errors }}
+            <label for="{{ form.attachment.id_for_label }}">Attachment</label>
+            {{ form.attachment }}
+        </div>
     </div>
 
-    <div class="form-group">
-        {{ form.commentxt.errors }}
-        <label for="{{ form.commentxt.id_for_label }}">Summary Text</label>
-        {{ form.commentxt }}
+    <div class="form-row">
+        <input class="btn btn-primary" type="submit" value="Submit">
+        <input class="btn btn-primary" onclick="window.history.go(-1); return false;" type="button" value="Cancel">
     </div>
-
-    <div class="form-group">
-        {{ form.attachment.errors }}
-        <label for="{{ form.attachment.id_for_label }}">Attachment</label>
-        {{ form.attachment }}
-    </div>
-
-    <!--
-    <input type="submit" value="Submit">
-    <input action="action" onclick="window.history.go(-1); return false;" type="button" value="Cancel">
-    -->
-    
-    <input class="btn btn-primary" type="submit" value="Submit">
-    <input class="btn btn-primary" onclick="window.history.go(-1); return false;" type="button" value="Cancel">
 
 </form>
 {% endblock %}

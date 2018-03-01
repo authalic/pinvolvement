@@ -22,7 +22,7 @@ div.card-body {
 
     padding: 0 5px 10px;
 }
-a.timestamp {
+.timestamp {
     font-size: 0.8rem;
     margin-top: 0.2rem;
     color: #444;

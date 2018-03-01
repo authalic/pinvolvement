@@ -31,6 +31,6 @@ class CommentForm(forms.ModelForm):
             'method': forms.Select(attrs={'class': 'form-control'}),
             'comment_datetime': forms.DateTimeInput(attrs={'class': 'form-control'}),
             'subject': forms.Select(attrs={'class': 'form-control'}),
-            'commentxt': forms.TextInput(attrs={'class': 'form-control'}),
+            'commentxt': forms.Textarea(attrs={'class': 'form-control', 'cols': 80, 'rows': 8}),
             'attachment': forms.FileInput(attrs={'class': 'form-control'}),
         }

@@ -62,8 +62,11 @@ class Contact(models.Model):
         ordering = ["last_name", "first_name"]
 
     def get_comments(self):
-        return Comment.objects.filter(contact=self.pk).order_by('-comment_datetime')
+        return Comment.objects.filter(contact=self.pk)
     
+    def get_subjects(self):
+        return Subject.objects.filter(contact=self.pk)
+
     def get_absolute_url(self):
         return reverse('contact-detail', args=[str(self.id)])
 
@@ -100,7 +103,10 @@ class Subject(models.Model):
         return pointLocation[1]
 
     def get_comments(self):
-        return Comment.objects.filter(subject=self.pk).order_by('timestamp')
+        return Comment.objects.filter(subject=self.pk)
+
+    def get_contacts(self):
+        return Contact.objects.filter(contact=self.contact).distinct()
     
     def __str__(self):
         return self.summary
@@ -115,7 +121,7 @@ class Comment(models.Model):
     contact = models.ForeignKey('Contact', on_delete=models.PROTECT, help_text="Individual who contacted PI")
     employee = models.ForeignKey(User, on_delete=models.PROTECT)
     timestamp = models.DateTimeField(auto_now_add=True) # stores the time the comment was created (not editable)
-    comment_datetime = models.DateTimeField(default=timezone.now) # editable datetime to allow user to backdate
+    comment_datetime = models.DateTimeField(default=timezone.now, editable=True) # editable datetime to allow user to backdate
     subject = models.ForeignKey('Subject', blank=True, null=True, on_delete=models.PROTECT)
     commentxt = models.TextField('Comment Summary')
     attachment = models.FileField('Attachment', upload_to='contacts/', null=True, blank=True) # attach photos, flyers, random files
@@ -142,14 +148,6 @@ class Comment(models.Model):
         
     def __str__(self):
         return '%s: %s' % (self.contact, self.subject)
-    
-    # def get_comments(self):
-    #     if self.subject:
-    #         return Subject.objects.filter(pk=self.subject.pk).order_by('-initial_date')
-    #     else:
-    #         return False
-
-
 
     # helper function for styling the back-and-forth Comments in a Subject
     def is_incoming(self):

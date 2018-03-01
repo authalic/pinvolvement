@@ -12,7 +12,19 @@
     <p><b>Employee: </b>{{ comment.employee }}</p>
     <p><b>Method of Contact: </b>{{ comment.method }}</p>
     <p><b>Summary of comment:</b></p>
-    <p>{{ comment.commentxt }}</p>
+
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="card bg-light border border-secondary">
+                <div class="card-header"><a href="{% url 'contact-detail' comment.contact.pk %}">{{ comment.contact }}</a> <div class="glyph">{{ comment.method }}</div></div>
+                <div class="card-body">
+                    <div class="card-title"><div class="timestamp">{{ comment.comment_datetime }}</div></div>
+                    <p class="card-text">{{ comment.commentxt }}</p>
+                </div>
+            </div>  
+        </div>
+    </div>
+
     <p><b>attachments: </b>{{ comment.attachment }}</p>
 
     {% if user.is_staff %}

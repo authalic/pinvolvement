@@ -65,7 +65,7 @@
                             + "Subject Created: {{ subject.initial_date }}<br>" 
                             + "Last Activity: {{ subject.last_activity }}"
                             );
-            marker.bindTooltip("{{ subject.contact }} <br> {{ subject.summary }} ")
+            marker.bindTooltip("<b> {{ subject.contact }} </b><br> {{ subject.summary }} ")
             marker.addTo(mymap);
         {% endfor %}
     </script>

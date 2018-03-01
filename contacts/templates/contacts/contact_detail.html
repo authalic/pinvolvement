@@ -27,7 +27,17 @@
     <h3>Communication History</h3>
 
     <div class="container">
+
+    {% if contact.get_subjects %}
+        <h4>Subjects in which this contact has commented</h4>
+        <ul>
+        {% for subject in contact.get_subjects %}
+            <li><a href="{% url 'subject-detail' subject.pk %}"><b>{{ subject.summary }}</b></a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
     {% if contact.get_comments %}
+        <h4>Comments</h4>
         {% for comment in contact.get_comments %}
         {% if comment.is_incoming %}
         <div class="row">
