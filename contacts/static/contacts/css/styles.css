@@ -42,3 +42,11 @@ div.glyph {
     font-weight: bold;
     float: right;
 }
+
+a {
+    color: #333;
+}
+
+th {
+    color:#888;
+}

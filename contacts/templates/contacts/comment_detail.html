@@ -4,14 +4,11 @@
 
 
 {% block content %}
-    <h3>Comment Detail</h1>
+    <div class="alert alert-light" role="alert">
+        <h3>Incoming Comment Detail</h3>
+    </div>
 
-    <p><b>Subject: </b><a href="{% url 'subject-detail' comment.subject.pk %}">{{ comment.subject }}</a></p>
-    <p><b>Contact: </b><a href="{% url 'contact-detail' comment.contact.pk %}">{{ comment.contact }}</a></p>
-    <p><b>Direction of Comment: </b>{{ comment.direction }}</p>
     <p><b>Employee: </b>{{ comment.employee }}</p>
-    <p><b>Method of Contact: </b>{{ comment.method }}</p>
-    <p><b>Summary of comment:</b></p>
 
     <div class="row">
         <div class="col-sm-8">
@@ -28,9 +25,11 @@
     <p><b>attachments: </b>{{ comment.attachment }}</p>
 
     {% if user.is_staff %}
-
         <a class="btn btn-primary" href="{% url 'comment_update' comment.pk %}" role="button">Edit</a>
+    {% endif %}
 
+    {% if user.is_superuser %}
+        <a class="btn btn-primary" href="{% url 'comment_delete' comment.pk %}" role="button">Delete</a>
     {% endif %}
 
 {% endblock %}

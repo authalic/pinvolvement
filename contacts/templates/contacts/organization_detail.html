@@ -4,9 +4,14 @@
 
 
 {% block content %}
-    <h3>{{ organization.org_name }}</h3>
+
+    <div class="alert alert-light" role="alert">
+        <h3>{{ organization.org_name }}</h3>
+    </div>
+
     <p>{{ organization.org_address1 }} {{ organization.org_address2 }}</p>
-    <p>{{ organization.org_city }} {{ organication.org_state }} {{ organization.org_zipcode }}</p>
+    <p>{{ organization.org_city }} {{ organization.org_state }} {{ organization.org_zipcode }}</p>
+    <p><a href="tel:{{ organization.org_phone }}">{{ organization.org_phone }}</a></p>
     
     <div class='container'>
 

@@ -4,14 +4,18 @@
 
 
 {% block content %}
-    <h3>Organization List</h1>
+    <div class="alert alert-light" role="alert">
+        <h3>Organization List</h3>
+    </div>
+    
 
     {% if organization_list %}
         <table style="width: 100%">
             <tr>
-                <th style="width: 50%;">Organization</th>
-                <th style="width: 30%;">Address</th>
+                <th style="width: 40%;">Organization</th>
+                <th style="width: 25%;">Address</th>
                 <th style="width: 20%;">City</th>
+                <th style="width: 15%;">Phone</th>
             </tr>
             {% for org in organization_list %}
             <tr>
@@ -23,6 +27,9 @@
                 </td>
                 <td>
                     {{ org.org_city}}
+                </td>
+                <td>
+                    <a href="tel:{{ org.org_phone }}">{{ org.org_phone }}</a>
                 </td>
             </tr>
             {% endfor %}

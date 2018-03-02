@@ -9,8 +9,8 @@ class ContactAdmin(admin.ModelAdmin):
     
 
 class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ('org_name', 'org_address1', 'org_address2', 'org_city', 'org_state', 'org_zipcode')
-    fields = (('org_name'), ('org_address1', 'org_address2'), ('org_city', 'org_state', 'org_zipcode'))
+    list_display = ('org_name', 'org_address1', 'org_address2', 'org_city', 'org_state', 'org_zipcode', 'org_phone')
+    fields = (('org_name'), ('org_address1', 'org_address2'), ('org_city', 'org_state', 'org_zipcode'), ('org_phone'))
 
 
 class CommentAdmin(admin.ModelAdmin):

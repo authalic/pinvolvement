@@ -8,16 +8,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap 4.0 CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous"> 
+        
     {% block leafletheaders %}{% endblock %}
-
     {% load static %}
-    <link rel='stylesheet' href='{% static "contacts/css/styles.css" %}' >
     
-    {% block title %}<title>Document</title>{% endblock %}
+    <link rel='stylesheet' href='{% static "contacts/css/styles.css" %}'> {% block title %}
+    <title>Document</title>{% endblock %}
     <!-- add css file from static files -->
-    
+
     {% block headerstyle %}{% endblock %}
 
 </head>
@@ -27,50 +27,52 @@
     <!-- navbar Responsive collapse on small screens  -->
 
     <nav class="navbar sticky-top navbar-expand-md navbar-light bg-light">
-      <a class="navbar-brand" href="{% url 'index' %}">GIS App</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    
-      <div class="collapse navbar-collapse" id="navbarToggler">
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'index' %}">Main Map</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'contacts' %}">Contacts</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'organizations' %}">Organizations</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'subjects' %}">Subjects</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'comments' %}">Comments</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#">Outreach Log</a>
-          </li>
-        </ul>
-        <ul class="nav justify-content-end">
-            {% if user.is_authenticated %}
-              <li class="navbar-text">User: {{ user.first_name }}</li>
-              {% if user.is_superuser %}
+        <a class="navbar-brand" href="{% url 'index' %}">Project App</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarToggler">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Main Map</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contacts' %}">Contacts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'organizations' %}">Organizations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'subjects' %}">Subjects</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'comments' %}">Comments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Outreach Log</a>
+                </li>
+                {% if user.is_superuser %}
                 <li>
-                  <a class="nav-link" href="{% url 'admin:index'%}">Admin</a>
-                </li>  
-              {% endif %}
-              <li>
-                <a class="nav-link" href="{% url 'logout'%}?next={{request.path}}">Logout</a>
-              </li>   
-            {% else %}
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'login'%}?next={{request.path}}">Login</a>
-              </li>   
-            {% endif %}
-        </ul>
-      </div>
+                    <a class="nav-link" href="{% url 'admin:index'%}">Admin</a>
+                </li>
+                {% endif %}
+            </ul>
+            <ul class="nav justify-content-end">
+                {% if user.is_authenticated %}
+                <li class="navbar-text">User: {{ user.username }}</li>
+
+                <li>
+                    <a class="nav-link" href="{% url 'logout'%}?next={{request.path}}">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login'%}?next={{request.path}}">Login</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
     </nav>
 
     <div class="container-fluid">
@@ -78,12 +80,11 @@
         <div class="jumbotron">
 
             {% block content %}{% endblock %}
-        
+
         </div>
 
         <!-- footer -->
-        {% block pagination %} 
-        {% if is_paginated %}
+        {% block pagination %} {% if is_paginated %}
         <div class="pagination">
             <span class="page-links">
                 {% if page_obj.has_previous %}
@@ -97,16 +98,17 @@
                 {% endif %}
             </span>
         </div>
-        {% endif %}
-        {% endblock %}
+        {% endif %} {% endblock %}
 
     </div>
 
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" integrity="sha384-feJI7QwhOS+hwpX2zkaeJQjeiwlhOP+SdQDqhgvvo1DsjtiSQByFdThsxO669S2D" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" integrity="sha384-feJI7QwhOS+hwpX2zkaeJQjeiwlhOP+SdQDqhgvvo1DsjtiSQByFdThsxO669S2D"
+        crossorigin="anonymous"></script>
     <script>
 
     </script>

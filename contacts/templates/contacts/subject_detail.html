@@ -13,7 +13,10 @@
 
 
 {% block content %}
-    <h3>Subject: </b>{{ subject.summary }}</h3>
+    <div class="alert alert-light" role="alert">
+        <h3>{{ subject.summary }}</h3>
+    </div>
+    
     <p><b>Contact: </b><a href="{% url 'contact-detail' subject.contact.pk %}"><b>{{ subject.contact }}</b></a></p>
     <p><b>Employee: </b>{{ subject.employee }}</p>
     <p><b>Subject Created: </b>{{ subject.initial_date }}</p>

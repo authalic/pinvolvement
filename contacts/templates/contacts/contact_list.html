@@ -4,7 +4,9 @@
 
 
 {% block content %}
-    <h3>Contact List</h1>
+    <div class="alert alert-light" role="alert">
+        <h3>Contact List</h3>
+    </div>
 
     {% if contact_list %}
         <table style="width: 100%">
@@ -20,10 +22,10 @@
                     {{ contact.address1 }} {{ contact.address2 }}
                 </td>
                 <td>
-                    {{ contact.email }}
+                    <a href="mailto:{{ contact.email}}">{{ contact.email }}</a>
                 </td>
                 <td>
-                    {{ contact.phone }}
+                    <a href="tel:{{ contact.phone }}">{{ contact.phone }}</a>
                 </td>
             </tr>
             {% endfor %}

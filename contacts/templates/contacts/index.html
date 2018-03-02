@@ -59,11 +59,11 @@
 
             subjectURL = "{% url 'subject-detail' subject.pk %}"
 
-            marker.bindPopup("<h5>{{ subject.contact }}</h5>"
+            marker.bindPopup("<h4>{{ subject.contact }}</h4>"
                             + "<a href='" + subjectURL + "'>Subject: {{ subject.summary }}</a><br><br>"
-                            + "{{ subject.get_comments.count }} comment{{ subject.get_comments.count |pluralize}} on this subject<br>"
-                            + "Subject Created: {{ subject.initial_date }}<br>" 
-                            + "Last Activity: {{ subject.last_activity }}"
+                            + "{{ subject.get_comments.count }} comment{{ subject.get_comments.count |pluralize}} on this subject<br><br>"
+                            + "First Reported: {{ subject.initial_date }}<br>" 
+                            + "Last Activity:  {{ subject.last_activity }}"
                             );
             marker.bindTooltip("<b> {{ subject.contact }} </b><br> {{ subject.summary }} ")
             marker.addTo(mymap);

@@ -23,6 +23,7 @@ class Organization(models.Model):
     org_city = models.CharField("City", max_length=40, blank=True)
     org_state = models.CharField("State", max_length=2, blank=True, default="UT")
     org_zipcode = models.CharField("ZIP", max_length=10, blank=True)
+    org_phone = models.CharField("Phone", max_length=12, blank=True, help_text="Phone: xxx-xxx-xxxx")
 
     class Meta:
             ordering = ["org_name"]
@@ -64,7 +65,7 @@ class Contact(models.Model):
     def get_comments(self):
         return Comment.objects.filter(contact=self.pk)
     
-    def get_subjects(self):
+    def get_subjects(self):  # this isn't working correctly. Returning incomplete lists.
         return Subject.objects.filter(contact=self.pk)
 
     def get_absolute_url(self):

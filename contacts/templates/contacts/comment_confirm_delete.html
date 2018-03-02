@@ -4,13 +4,26 @@
 
     {% if user.is_staff %}
 
-    <h1>Delete Author</h1>
+    <h1>Delete Comment</h1>
 
-    <p>Are you sure you want to delete the comment: {{ comment }}?</p>
+    <p>Are you sure you want to delete the comment: </p>
+
+    <div class="row">
+            <div class="col-sm-8">
+                <div class="card bg-light border border-secondary">
+                    <div class="card-header">{{ comment.contact }} <div class="glyph">{{ comment.method }}</div></div>
+                    <div class="card-body">
+                        <div class="card-title"><a href="{% url 'comment-detail' comment.pk %}" class="timestamp">{{ comment.timestamp }} - {{ comment.subject }}</a></div>
+                        <p class="card-text">{{ comment.commentxt }}</p>
+                    </div>
+                </div>  
+            </div>
+        </div>
 
     <form action="" method="POST">
         {% csrf_token %}
-        <input type="submit" action="" value="Yes, delete." />
+        <input class="btn btn-primary" type="submit" value="Yes, delete">
+        <input class="btn btn-primary" onclick="window.history.go(-1); return false;" type="button" value="Cancel">
     </form>
 
     {% else %}
