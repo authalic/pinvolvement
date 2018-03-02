@@ -90,7 +90,7 @@ class Subject(models.Model):
     coordinates = models.PointField('Point Location', srid=4326, null=True)
 
     class Meta:
-        ordering = ["-last_activity"]
+        ordering = ["-initial_date"]
 
     def get_absolute_url(self):
         return reverse('subject-detail', args=[str(self.id)])
