@@ -10,12 +10,18 @@
     <!-- Bootstrap 4.0 CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous"> 
-        
-    {% block leafletheaders %}{% endblock %}
+    
+    {% block leafletheaders %}
+    {% endblock %}
+    
     {% load static %}
     
-    <link rel='stylesheet' href='{% static "contacts/css/styles.css" %}'> {% block title %}
-    <title>Document</title>{% endblock %}
+    <link rel='stylesheet' href='{% static "contacts/css/styles.css" %}'>
+    
+    {% block title %}
+    <title>Document</title>
+    {% endblock %}
+    
     <!-- add css file from static files -->
 
     {% block headerstyle %}{% endblock %}

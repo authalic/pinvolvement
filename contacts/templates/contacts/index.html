@@ -67,7 +67,11 @@
                             );
             marker.bindTooltip("<b> {{ subject.contact }} </b><br> {{ subject.summary }} ")
             marker.addTo(mymap);
+
         {% endfor %}
+
+        // when the marker's popup opens, close any open tooltips
+        
     </script>
 
     {% if user.is_staff %}
