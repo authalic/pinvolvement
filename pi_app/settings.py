@@ -54,8 +54,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'rest_framework',
     'leaflet',
     'contacts',
+    'pubinput',
 ]
 
 MIDDLEWARE = [
@@ -99,6 +101,15 @@ WSGI_APPLICATION = 'pi_app.wsgi.application'
 
 # Store database settings outside version control
 DATABASES = json.load(open('..//keys//PIapp//dbsettings_aws.json'))
+
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 
 # Password validation
