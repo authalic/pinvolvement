@@ -20,3 +20,12 @@ class CommentSerializer(serializers.ModelSerializer):
             'bcookie'
             )
 
+
+class ViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PublicComment
+        fields = (
+            'comment', 
+            'submitted', 
+            'location', 
+        )
