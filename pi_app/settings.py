@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'corsheaders',
     'rest_framework',
     'leaflet',
     'contacts',
@@ -61,9 +62,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -71,6 +73,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'pi_app.urls'
+
+CORS_ORIGIN_ALLOW_ALL = True  # Remove this in Production. Replace with line below.
+# CORS_ORIGIN_WHITELIST =('google.com', 'hostname.example.com', 'localhost:8000', '127.0.0.1:8000')
 
 TEMPLATES = [
     {
@@ -102,14 +107,6 @@ WSGI_APPLICATION = 'pi_app.wsgi.application'
 # Store database settings outside version control
 DATABASES = json.load(open('..//keys//PIapp//dbsettings_aws.json'))
 
-
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
-}
 
 
 # Password validation

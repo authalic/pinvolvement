@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css">
+
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+
+    <title>Public Comment Map</title>
+
+    <style>
+        #mapid {
+            height: 800px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- use the Display Utilities to hide and show forms -->
+
+    <div class="container-fluid">
+
+        <div class="jumbotron">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <!-- sidebar content in left side -->
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Comment Form</h5>
+
+                            <form class="form" id="commentform">
+                                <div class="form-row">
+                                    <div class="col">
+                                        <label for="firstName">First Name</label>
+                                        <input type="text" class="form-control" id="firstName" name="first_name">
+                                    </div>
+
+                                    <div class="col">
+                                        <label for="lastName">Last Name</label>
+                                        <input type="text" class="form-control" id="lastName" name="last_name">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col">
+                                        <label for="email">Email Address</label>
+                                        <input type="email" class="form-control" id="email" name="email">
+                                    </div>
+
+                                    <div class="col">
+                                        <label for="phone">Phone</label>
+                                        <input type="text" class="form-control" id="phone" name="phone">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col">
+                                        <label for="address1">Address</label>
+                                        <input type="text" class="form-control" id="address1" name="address1">
+                                    </div>
+                                    <div class="col">
+                                        <label for="address1">Address 2</label>
+                                        <input type="text" class="form-control" id="address2" name="address2">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col">
+                                        <label for="city">City</label>
+                                        <input type="text" class="form-control" id="city" name="city">
+                                    </div>
+                                    <div class="col">
+                                        <label for="state">State</label>
+                                        <input type="text" class="form-control" id="state" name="state">
+                                    </div>
+                                    <div class="col">
+                                        <label for="zipcode">Zip Code</label>
+                                        <input type="text" class="form-control" id="zipcode" name="zipcode">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col">
+                                        <label for="inputForm">Comment</label>
+                                        <textarea class="form-control" id="inputForm" placeholder="Enter your comment here" name="comment" style="height: 240px;"></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- hidden field for storing the coordinates of the placed point marker -->
+                                <div class="form-group">
+                                    <input type="hidden" class="form-control" id="pointCoords" name="location">
+                                </div>
+
+                                <!-- buttons -->
+                                <p>If you would like to associate your comment with a location on the map, click the button below, then click your site. </p>
+
+                                <button id="enableDraw" class="btn btn-primary" data-toggle="button">Add a Location to Map</button>
+
+                                <button id="submitBtn" class="btn btn-primary" type="submit">Submit Comment</button>
+
+                                <!-- display success or failure message here -->
+                                <div id="successMessage"></div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <!-- map window -->
+
+                    <div id="mapid"></div>
+
+                    <script>
+                        $(function initializeMap() {
+                            var mymap = L.map('mapid').setView([40.70, -111.9], 12);
+
+                            // when user clicks the Place Point Marker button, change cursor to crosshairs, enable the point place event
+                            $("#enableDraw").click(function () {
+                                $('#mapid').css('cursor','crosshair');
+                                mymap.on('click', onMapClick); // turn on the listening event to draw the point
+                            });
+
+                            // get the Mapbox tile layer 
+                            L.tileLayer(
+                                'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                                    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                                    maxZoom: 22,
+                                    id: 'mapbox.streets',
+                                    accessToken: 'pk.eyJ1IjoiYXV0aGFsaWMiLCJhIjoiSHppSDJlWSJ9.h8QdzKDNKE1p_XDuzIBoSg'
+                                }).addTo(mymap);
+
+                            // read the points from the json file, convert them to geojson, add to map
+
+                            // circle marker styling
+                            var geojsonMarkerOptions = {
+                                radius: 12,
+                                fillColor: "#ff7800",
+                                color: "#000",
+                                weight: 1,
+                                opacity: 1,
+                                fillOpacity: 0.85
+                            };
+
+                            function formatDate(dateObject) {
+                                // Reformat the dates.  This is a temporary klunky version
+
+                                hours = dateObject.getHours();
+                                minutes = dateObject.getMinutes();
+                                month = dateObject.getMonth() + 1;
+                                day = dateObject.getDate();
+                                year = dateObject.getFullYear();
+
+                                return "<b>"  + month + "-" + day + "-" + year + "  " + hours + ":" + minutes + "</b>"
+                            }
+
+                            function getMapPoints() {
+
+                                $.getJSON('http://localhost:8000/pubinput/viewcomments', function (json) {
+
+                                    // there is probably a more elegant way to do this...
+
+                                    for (x in json) {
+
+                                        if (json[x].location) { // check if there is a spatial location for the object
+
+                                            feature = {};
+
+                                            // store the items in the "properties" object
+                                            properties = {};
+                                            properties["submitted"] = new Date(json[x].submitted);
+                                            properties["comment"] = json[x].comment;
+
+
+                                            // split out the lat/lon from the Coordinates string
+                                            var re = /\(([^)]+)\)/; // get everything between the parentheses
+                                            lon = parseFloat(re.exec(json[x].location)[1].split(" ")[0]); // split the string at the space, return the 1st part
+                                            lat = parseFloat(re.exec(json[x].location)[1].split(" ")[1]); // return the second part
+
+                                            feature.type = "Point";
+                                            feature.properties = properties;
+                                            feature.coordinates = [lon, lat]
+
+                                            var myStyle = {
+                                                "color": "#ff7800",
+                                                "weight": 5,
+                                                "opacity": 0.65
+                                            };
+
+                                            L.geoJSON(feature, {
+                                                pointToLayer: function (feature, latlng) {
+                                                    newMarker = L.circleMarker(latlng, geojsonMarkerOptions);
+                                                    newMarker.bindPopup(
+                                                        "<h5>" + feature.properties.comment + "</h5><br>" + formatDate(feature.properties.submitted)
+                                                        );
+                                                    return newMarker;
+                                                },
+
+                                            }).addTo(mymap);
+                                        }
+                                    }
+                                });
+                            }
+
+                            getMapPoints();
+
+                            // store the current coordinates of the placed marker
+                            var markerLocation;
+
+                            // obtain the marker's initial position
+                            function onMapClick(e) {
+                                markerLocation = e.latlng;
+
+                                commentMarker = new L.marker(e.latlng, {
+                                    draggable: true
+                                });
+
+                                mymap.addLayer(commentMarker);  // layer storing the dropped point.  Use this to remove the point later.
+                                mymap.off('click');
+                                commentMarker.on('move', onMarkerMove);
+                            };
+
+                            // update the marker's xy position when the marker is dragged
+                            function onMarkerMove(e) {
+                                markerLocation = e.latlng;
+                            };
+
+                            // convert the marker's lat/lon location to the format expected by Django
+                            function getPointCoordsText() {
+
+                                if (markerLocation) {
+                                    var droppedPoint = markerLocation;
+
+                                    // ST_GeomFromText('POINT(-71.060316 48.432044)', 4326)
+                                    // var wkt = "'SRID=4326;POINT(" + markerLocation.lng + " " + markerLocation.lat + ")'";
+    
+                                    var wkt = "POINT(" + droppedPoint.lng + " " + droppedPoint.lat + ")";
+    
+                                    return wkt;
+                                }
+                                else {
+                                    return null;
+                                }
+
+                            };
+
+
+                            // handle the form submit using jQuery AJAX
+                            $("#commentform").submit(function (event) {
+
+                                // stop form from submitting normally
+                                event.preventDefault();
+
+                                // change the cursor back to default
+                                $('mapid').css('cursor','default');
+
+                                var coords = getPointCoordsText();
+
+                                $("#pointCoords").val(coords);
+
+                                $.ajax({
+                                    method: "POST",
+                                    url: "http://localhost:8000/pubinput/addcomment",
+                                    data: $("#commentform").serialize(),
+                                    success: function (e) {
+                                        $("#commentform")[0].reset();
+                                    },
+                                    error: function (e) {
+                                        alert("Failed" + msg);
+                                        return false;
+                                    }
+                                });
+                                $('#successMessage').html("<b>Successfully added to database</b>");
+
+                                // remove the marker symbol placed by User, if one was placed
+                                if (commentMarker) {
+                                    mymap.removeLayer(commentMarker);
+                                }
+
+                                // refresh the map here, by removing it and rebuilding it.
+                                mymap.remove();
+                                initializeMap();
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

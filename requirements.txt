@@ -5,6 +5,7 @@ certifi==2018.1.18
 chardet==3.0.4
 colorama==0.3.7
 Django==2.0.2
+django-cors-headers==2.2.0
 django-filter==1.1.0
 django-leaflet==0.23.0
 djangorestframework==3.7.7

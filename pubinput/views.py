@@ -24,9 +24,9 @@ class CommentView(LoginRequiredMixin, generics.RetrieveUpdateDestroyAPIView):
 
 class CommentListOnly(generics.ListAPIView):
     '''
-    List all comments only. No other request types allowed
-    Fields are limited to comment, location, and date submitted
-    This is the "redacted" view of the data that will appear on the comment map
+    Endpoint to GET all Comments (redacted). 
+    No other request types permitted.
+    Fields are limited to comment, location, and date/time submitted.
     '''
     queryset = PublicComment.objects.all()  
     serializer_class =  ViewSerializer  # change this serializer
@@ -34,7 +34,7 @@ class CommentListOnly(generics.ListAPIView):
 
 class CommentCreateOnly(generics.CreateAPIView):
     '''
-    Endpoint for creating Comments. No other request types allowed
+    Endpoint for public to POST Comments. No other request types permitted.
     '''
     queryset = PublicComment.objects.all()  
     serializer_class = CommentSerializer  # change this serializer
