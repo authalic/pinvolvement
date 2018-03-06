@@ -4,6 +4,7 @@
 
 {% block leafletheaders %}
 
+    <!-- load main Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
     crossorigin="" />
 
@@ -14,6 +15,13 @@
     <!-- load jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+    <!-- Load Esri Leaflet from CDN -->
+    <script src="https://unpkg.com/esri-leaflet@2.1.3/dist/esri-leaflet.js" integrity="sha512-pijLQd2FbV/7+Jwa86Mk3ACxnasfIMzJRrIlVQsuPKPCfUBCDMDUoLiBQRg7dAQY6D1rkmCcR8286hVTn/wlIg=="
+    crossorigin=""></script>
+
+    <!-- Esri Leaflet Geocoder -->
+    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.9/dist/esri-leaflet-geocoder.css">
+    <script src="https://unpkg.com/esri-leaflet-geocoder@2.2.8"></script>
     
 {% endblock %}
 
@@ -41,12 +49,27 @@
             maxBoundsViscosity: 0.5,
         });
 
+        L.esri.basemapLayer("Topographic").addTo(mymap);
+        /*
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 20,
         id: 'mapbox.streets',
         accessToken: 'pk.eyJ1IjoiYXV0aGFsaWMiLCJhIjoiSHppSDJlWSJ9.h8QdzKDNKE1p_XDuzIBoSg',
         }).addTo(mymap);
+        */
+
+        var searchControl = L.esri.Geocoding.geosearch().addTo(mymap);
+
+        var results = L.layerGroup().addTo(mymap);
+      
+        searchControl.on('results', function(data){
+          results.clearLayers();
+          for (var i = data.results.length - 1; i >= 0; i--) {
+              /*  Change the appearance of the marker here, so it doesn't look like others on map */
+            results.addLayer(L.marker(data.results[i].latlng));
+          }
+        });
 
 
 

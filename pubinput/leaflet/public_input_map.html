@@ -167,7 +167,9 @@
 
                             function getMapPoints() {
 
-                                $.getJSON('http://localhost:8000/pubinput/viewcomments', function (json) {
+                                $.getJSON('http://authalic.pythonanywhere.com/pubinput/viewcomments/', function (json) {
+                                // $.getJSON('http://localhost:8000/pubinput/viewcomments', function (json) {      # This works
+                                    
 
                                     // there is probably a more elegant way to do this...
 
@@ -271,7 +273,8 @@
 
                                 $.ajax({
                                     method: "POST",
-                                    url: "http://localhost:8000/pubinput/addcomment",
+                                    url: "http://authalic.pythonanywhere.com/pubinput/addcomment/",
+                                    // url: "http://localhost:8000/pubinput/addcomment",  this works
                                     data: $("#commentform").serialize(),
                                     success: function (e) {
                                         $("#commentform")[0].reset();
