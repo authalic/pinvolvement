@@ -35,4 +35,9 @@ urlpatterns = [
 
     # use the generic view to delete
     path('subject/<uuid:pk>/delete', views.SubjectDelete.as_view(), name='subject_delete'),
+
+
+    # for testing the workflow form
+    path('workflow/', views.workflow, name='workflow'),
+
 ]

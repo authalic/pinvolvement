@@ -6,8 +6,53 @@ from django.http import HttpResponseRedirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_http_methods
-from .forms import SubjectForm, CommentForm
+from .forms import SubjectForm, CommentForm, ContactForm
 from .models import Organization, Contact, Subject, Comment
+
+
+def workflow(request):
+    '''
+    View for developing and testing the Workflow form. Ultimately will replace the index view
+    '''
+    contact_form = ContactForm(prefix="contact")
+    subject_form = SubjectForm(prefix="contact")
+    comment_form = CommentForm(prefix="comment")
+
+    if request.method == 'POST':
+
+        contact_form = ContactForm(request.POST, prefix="contact")
+        subject_form = SubjectForm(request.POST, prefix="contact")
+        comment_form = CommentForm(request.POST, prefix="comment")
+
+        if all([contact_form.is_valid(), subject_form.is_valid(), comment_form.is_valid()]):
+
+            # should each model be tested to see if an object currently exists?
+            # Look at the specific actions behind the .save() method
+            #   does it create a new object if one exists?
+            #   does it overwrite fields if some or none have changed?
+
+            # Here is where the individual forms are saved and committed
+            # There is a specific order that needs to be followed:
+
+            # subject_form.save(commit=False)
+            # subject_form.contact = contact_form.save()
+            # subject_form.save()
+            # comment_form.save(commit=False)
+            # comment_form.subject = subject_form
+            # comment_form.save()
+
+
+
+
+
+
+    context = {
+        'contact_form': ContactForm(prefix="contact"),
+        'subject_form': SubjectForm(prefix="subject"),
+        'comment_form': CommentForm(prefix="comment"),
+    }
+
+    return render(request, 'contacts/index.html', context)
 
 
 # Create your views here.
@@ -21,24 +66,22 @@ def index(request):
 
     subjects = Subject.objects.all()
 
-
     # Generate counts of some of the main objects
     num_org = Organization.objects.count()
     num_contact = Contact.objects.count()
     num_subject = Subject.objects.count()
     num_comment = Comment.objects.count()
 
-    return render(
-        request,
-        'contacts/index.html',
-        context={
-            'subjects': subjects,
-            'num_org': num_org,
-            'num_contact': num_contact,
-            'num_subject': num_subject,
-            'num_comment': num_comment,
-        }
-    )
+    context = {
+        'subjects': subjects,
+        'num_org': num_org,
+        'num_contact': num_contact,
+        'num_subject': num_subject,
+        'num_comment': num_comment,
+    }
+
+    return render(request, 'contacts/index.html', context)
+
 
 # Generic CBVs
 # templates are set by default in the CBVs at: 
@@ -141,10 +184,10 @@ class SubjectDelete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('subjects')
 
 
-
-# NOTE:
+# Forms  NOTE:
 # the Create and Update Subject forms require the Leaflet widget and cannot be created as generic views
 # the Create and Update Comment forms require more Bootstrap styling than generic views
+
 
 @login_required
 def subject_update_view(request, pk):

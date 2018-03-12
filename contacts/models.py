@@ -38,7 +38,7 @@ class Organization(models.Model):
         return self.org_name
 
 
-class Contact(models.Model):
+class Contact(models.Model):  # AKA:  Person
     '''
     Class representing an individual person with whom contact has been made on
     this project Address, Phone, Email information are attached to this person,
@@ -75,7 +75,7 @@ class Contact(models.Model):
         return '%s %s' % (self.first_name, self.last_name)
 
 
-class Subject(models.Model):
+class Subject(models.Model):  # AKA: Topic
     '''
     The description and location of an issue reported by a Contact.
     Subjects are linked to the Contact who initiated the issue.
@@ -113,7 +113,7 @@ class Subject(models.Model):
         return self.summary
 
 
-class Comment(models.Model):
+class Comment(models.Model):  # AKA:  Interaction
     '''
     Class representing the single comments attached to a Subject
     to/from one Contact to/from a Employee
@@ -125,6 +125,7 @@ class Comment(models.Model):
     comment_datetime = models.DateTimeField(default=timezone.now, editable=True) # editable datetime to allow user to backdate
     subject = models.ForeignKey('Subject', blank=True, null=True, on_delete=models.PROTECT)
     commentxt = models.TextField('Comment Summary')
+    followup = models.BooleanField(default=False)
     attachment = models.FileField('Attachment', upload_to='contacts/', null=True, blank=True) # attach photos, flyers, random files
 
     DIRECTION_CHOICES = [

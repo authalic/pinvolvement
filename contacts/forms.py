@@ -1,10 +1,16 @@
 from django import forms
 from leaflet.forms.widgets import LeafletWidget
-from .models import Subject, Comment #, Contact, Organization
+from .models import Subject, Comment, Contact, Organization
+
+
+class ContactForm(forms.ModelForm):
+    
+    class Meta:
+        model = Contact
+        fields = '__all__'
 
 
 class SubjectForm(forms.ModelForm):
-    # Form fields can go here, with added validators
 
     class Meta:
         model = Subject
@@ -19,7 +25,6 @@ class SubjectForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
-    # Form fields can go here, with added validators
 
     class Meta:
         model = Comment

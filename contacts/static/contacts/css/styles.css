@@ -50,3 +50,9 @@ a {
 th {
     color:#888;
 }
+
+.tabarea {
+    background-color: #ddddff;
+    padding: 4px;
+    height: 600px;
+}
