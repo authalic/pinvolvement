@@ -33,17 +33,19 @@
         <div class="tabarea">
             <ul class="nav nav-tabs" id="nav-tab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab">Home</a>
+                    <a class="nav-link active" id="topics-tab" data-toggle="tab" href="#topics" role="tab">Topics</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#history">History</a>
+                    <a class="nav-link" id="history-tab" data-toggle="tab" href="#history">History</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact">Contact</a>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="home" role="tabpanel">
+
+                <!-- Tab 1 -->
+                <div class="tab-pane fade show active" id="topics" role="tabpanel">
 
                     <h3>{{ subject_form.contact }}</h3>
 
@@ -60,8 +62,15 @@
 
                 </div>
 
-                <div class="tab-pane fade" id="history" role="tabpanel">tab 2 content</div>
-                <div class="tab-pane fade" id="contact" role="tabpanel">Tab 3 content</div>
+                <!-- Tab 2-->
+                <div class="tab-pane fade" id="history" role="tabpanel">
+                    tab 2 content
+                </div>
+
+                <!-- Tab 3 -->
+                <div class="tab-pane fade" id="contact" role="tabpanel">
+                    Tab 3 content
+                </div>
 
             </div>
         </div>
