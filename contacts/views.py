@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_http_methods
@@ -24,7 +24,11 @@ def workflow(request):
         subject_form = SubjectForm(request.POST, prefix="contact")
         comment_form = CommentForm(request.POST, prefix="comment")
 
-        if all([contact_form.is_valid(), subject_form.is_valid(), comment_form.is_valid()]):
+        if all([
+            contact_form.is_valid(),
+            subject_form.is_valid(),
+            comment_form.is_valid()
+            ]):
 
             # should each model be tested to see if an object currently exists?
             # Look at the specific actions behind the .save() method
@@ -41,16 +45,16 @@ def workflow(request):
             # comment_form.subject = subject_form
             # comment_form.save()
 
-
-
-
-
-
-    context = {
-        'contact_form': ContactForm(prefix="contact"),
-        'subject_form': SubjectForm(prefix="subject"),
-        'comment_form': CommentForm(prefix="comment"),
-    }
+            HttpResponseRedirect('/contacts/index.html')
+        else:
+            HttpResponse('Error!!!!')
+    else:
+        context = {
+            'subjects': Subject.objects.all(),
+            'contact_form': ContactForm(prefix="contact"),
+            'subject_form': SubjectForm(prefix="subject"),
+            'comment_form': CommentForm(prefix="comment"),
+        }
 
     return render(request, 'contacts/index.html', context)
 
