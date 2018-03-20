@@ -47,21 +47,15 @@
 
                         <h3>{{ subject_form.contact }} </h3>
 
-                        {% include 'contacts/workflow_test.html' %}
+                        {% include 'contacts/input_contact_form.html' %}
 
                         <!--Included template is rendered within the context of its including template 
                             to include additional context, add 'with' to the 'include' statement
                             {# {% include 'test/template.html with person="Joe" greeting="Hey" %} #}
                         -->
 
-                        <form class='my-ajax-form' method='POST' action='.' data-url='#'>
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                            <button type='submit'>Submit</button>
-                        </form>
-
                         {% if user.is_staff %}
-                        <a class="btn btn-primary" href="{% url 'subject_create' %}" role="button">+</a>
+                        <a class="btn btn-primary" href="{% url 'subject_create' %}" role="button">+ Subject</a>
                         {% endif %}
                     
                     </div>
@@ -88,16 +82,30 @@
                     ],
                     maxBoundsViscosity: 0.5,
                 });
-        
-                L.esri.basemapLayer("Topographic").addTo(mymap);
-                /*
+
+                // disable the input fields until the user clicks the "Place Point Marker" button 
+                $(".form-control").attr('disabled', 'disabled');
+                $("#submitBtn").hide();
+
+
+                // when user clicks the Place Point Marker button, turn on the fields and enable the point place event
+                $("#enableDraw").click(function () {
+                    $(".form-control").prop('disabled', false); // turn on the fields
+                    mymap.on('click', onMapClick); // turn on the listening event to draw the point
+                    $("#submitBtn").show();
+                });
+            
+                // ESRI basemaps
+                // L.esri.basemapLayer("Topographic").addTo(mymap);
+                
+                // Mapbox basemaps
                 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
                 maxZoom: 20,
                 id: 'mapbox.streets',
                 accessToken: 'pk.eyJ1IjoiYXV0aGFsaWMiLCJhIjoiSHppSDJlWSJ9.h8QdzKDNKE1p_XDuzIBoSg',
                 }).addTo(mymap);
-                */
+                
         
                 var searchControl = L.esri.Geocoding.geosearch().addTo(mymap);
         
