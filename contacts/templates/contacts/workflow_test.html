@@ -1,4 +1,48 @@
 
     <h1>INCLUDED FORM</h1>
-    {{ form }}
+    
 
+    
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Contact Form</h5>
+
+            <form class="form" id="commentform">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" class="form-control" id="firstName" name="first_name" placeholder="First Name">
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Last Name">
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+                </div>
+
+                <div class="form-group">
+                    <label for="inputPhone">Phone</label>
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="xxx-xxx-xxxx">
+                </div>
+
+                <div class="form-group">
+                    <label for="inputForm">Comment</label>
+                    <textarea class="form-control" id="inputForm" placeholder="Enter your comment here" style="height: 240px;"></textarea>
+                </div>
+
+                <!-- hidden field for storing the coordinates of the placed point marker -->
+                <div class="form-group">
+                    <input type="hidden" class="form-control" id="pointCoords" name="coordinates">
+                </div>
+
+                <!-- buttons -->
+
+                <button id="enableDraw" class="btn btn-primary" data-toggle="button">Place Point Marker</button>
+
+                <button id="submitBtn" class="btn btn-primary" type="submit">Submit</button>
+
+            </form>
+        </div>
+    </div>
