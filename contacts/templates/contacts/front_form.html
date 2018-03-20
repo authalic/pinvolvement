@@ -1,0 +1,70 @@
+
+<!-- this is the form that appears on the main tab -->
+
+    <div class="card">
+        <div class="card-body">
+
+            <h5 class="card-title">Front Form</h5>
+
+            <form class="form" id="commentform" action="" method="post">
+
+                {% csrf_token %}
+
+                <!-- {{ subject_form.summary }} -->
+                
+                <div class="form-group">
+
+                    <input type="text" class="form-control autocomplete" id="nameSearchField" placeholder="Search by name" tabindex="1"/>
+
+                </div>
+
+                      
+                <!-- buttons -->
+
+                <div class="form-group">
+
+                        <button id="enableDraw" class="btn btn-primary" data-toggle="button" tabindex="2">Place Point Marker</button>
+                        <button id="submitBtn" class="btn btn-primary" type="submit">Submit</button>
+                        <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                        <p style="font-size: 80%;" id="drawMssg">Click the map to place a point</p>
+                </div>
+
+
+            </form>
+            <script>
+                    $(function () {
+
+                        function addContactsToDropdown() {
+                            var contactList = [];
+
+                            {% for contact in contacts %}
+                               contactList.push('{{ contact }}');
+                            {% endfor %}
+    
+                            var contactNames = contactList;
+    
+                            $(".autocomplete").autocomplete({
+                                source: contactNames
+                            });
+
+                        };
+
+                        function populateConversationHistory(contactName) {
+                            console.log(contactName);
+
+                        };
+
+                        // handle pressing the Enter key inside the search field
+                        $("#nameSearchField").on("keypress", function (e) {
+                            
+                            if (e.keyCode === 13) {
+                                e.preventDefault();  // prevent the default Enter Key response, or it will also set off the buttons
+                                populateConversationHistory($("#nameSearchField").val());
+                            };
+                        });
+
+                        addContactsToDropdown();
+                    });
+            </script>
+        </div>
+    </div>

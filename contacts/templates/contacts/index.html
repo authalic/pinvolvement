@@ -4,13 +4,13 @@
 
 {% block leafletheaders %}
 
-    <!-- load main Leaflet -->
+    <!-- load main Leaflet CSS-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin="" />
 
-    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <!-- Leaflet JS - Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
 
-    <!-- Load Esri Leaflet from CDN -->
+    <!-- Load Esri Leaflet JS from CDN -->
     <script src="https://unpkg.com/esri-leaflet@2.1.3/dist/esri-leaflet.js" integrity="sha512-pijLQd2FbV/7+Jwa86Mk3ACxnasfIMzJRrIlVQsuPKPCfUBCDMDUoLiBQRg7dAQY6D1rkmCcR8286hVTn/wlIg==" crossorigin=""></script>
 
     <!-- Esri Leaflet Geocoder -->
@@ -46,25 +46,27 @@
 
                 <!-- Tab 1 -->
                 <div class="tab-pane fade show active" id="topics" role="tabpanel">
-
-                    <h3>{{ subject_form.contact }}</h3>
-
-                    {% include 'contacts/input_contact_form.html' %}
+                        
+                    {% include 'contacts/front_form.html' %}
 
                     <!--Included template is rendered within the context of its including template 
-                            to include additional context, add 'with' to the 'include' statement
-                            {# {% include 'test/template.html with person="Joe" greeting="Hey" %} #}
-                        -->
-
-                    {% if user.is_staff %}
-                        <a class="btn btn-primary" href="{% url 'subject_create' %}" role="button">+ Subject</a>
-                    {% endif %}
+                            to include additional context, add 'with' to the 'include' statement -->
 
                 </div>
 
                 <!-- Tab 2-->
                 <div class="tab-pane fade" id="history" role="tabpanel">
                     tab 2 content
+                        
+                        <!-- jQueryUI Datepicker Test -->
+
+                        <p> Date: <input type="text" id="datepicker"></p>
+
+                        <script>
+                            $( function() {
+                                $( "#datepicker" ).datepicker();
+                            })
+                        </script>
                 </div>
 
                 <!-- Tab 3 -->
@@ -74,18 +76,6 @@
 
             </div>
         </div>
-
-        <!-- jQueryUI Datepicker Test -->
-
-        <p> Date: <input type="text" id="datepicker"></p>
-
-        <script>
-            $( function() {
-                $( "#datepicker" ).datepicker();
-            })
-        </script>
-
-
     </div>
     <!-- End of sidebar -->
 
@@ -94,116 +84,128 @@
 
         <div id="mapid"></div>
 
-        <script>
-
-            var mymap = L.map('mapid', {
-                center: [40.755, -111.88],
-                zoom: 12,
-                minZoom: 10,
-                maxBounds: [
-                    [40.9, -112.2],
-                    [40.6, -111.7]
-                ],
-                maxBoundsViscosity: 0.5,
-            });
-
-            // disable the input fields until the user clicks the "Place Point Marker" button 
-            $(".form-control").attr('disabled', 'disabled');
-            
-            // hide the Submit button until user places a point on the map
-            $("#submitBtn").hide();
-
-            // when user clicks the Place Point Marker button, turn on the form fields and enable the point place event
-            $("#enableDraw").click(function () {
-                $(".form-control").prop('disabled', false); // turn on the fields
-                mymap.on('click', onMapClick); // turn on the listening event and set handler for placing a point
-                $("#submitBtn").show();
-                $("#mapid").css('cursor', 'crosshair');
-            });
-
-            // ESRI basemaps
-            // L.esri.basemapLayer("Topographic").addTo(mymap);
-
-            // Mapbox basemaps
-            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-                maxZoom: 20,
-                id: 'mapbox.streets',
-                accessToken: 'pk.eyJ1IjoiYXV0aGFsaWMiLCJhIjoiSHppSDJlWSJ9.h8QdzKDNKE1p_XDuzIBoSg',
-            }).addTo(mymap);
-
-            // ESRI search widget
-            var searchControl = L.esri.Geocoding.geosearch().addTo(mymap);
-            var results = L.layerGroup().addTo(mymap);
-            searchControl.on('results', function (data) {
-                results.clearLayers();
-                for (var i = data.results.length - 1; i >= 0; i--) {
-                    /*  Change the appearance of the marker here, so it doesn't look like others on map */
-                    results.addLayer(L.marker(data.results[i].latlng));
-                }
-            });
-
-            // circle marker styling
-            var geojsonMarkerStyling = {
-                radius: 12,
-                fillColor: "#ff7800",
-                color: "#000",
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
-            };
-
-            // go to town with Django template tags and context variables
-            {% for subject in subjects %}
-
-                // check if the Subject has a spatial location (some may be unattached to a point)
-                {% if subject.coordinates %}
-
-                    // create a new circleMarker for each existing Issue/Subject
-                    var marker = L.circleMarker( [ {{ subject.lat }}, {{ subject.lon }} ], geojsonMarkerStyling );
-
-                    // Get each marker's individual details
-                    subjectURL = "{% url 'subject-detail' subject.pk %}"
-
-                    // build the popup contents
-                    marker.bindPopup("<h4>{{ subject.contact }}</h4>"
-                        + "<a href='" + subjectURL + "'>Subject: {{ subject.summary }}</a><br><br>"
-                        + "{{ subject.get_comments.count }} comment{{ subject.get_comments.count |pluralize}} on this subject<br><br>"
-                        + "First Reported: {{ subject.initial_date }}<br>"
-                        + "Last Activity:  {{ subject.last_activity }}"
-                    );
-                    marker.bindTooltip("<b> {{ subject.contact }} </b><br> {{ subject.summary }} ")
-                    marker.addTo(mymap);
-
-                {% endif %}
-            {% endfor %}
-
-            // when the marker's popup opens, close any open tooltips
-
-
-            // store the current coordinates of the placed marker
-            var markerLocation;
-
-            // obtain the marker's initial position
-            function onMapClick(e) {
-                markerLocation = e.latlng;
-
-                commentMarker = new L.marker(e.latlng, {
-                    draggable: true
-                });
-
-                mymap.addLayer(commentMarker);  // layer storing the dropped point.  Use this to remove the point later.
-                mymap.off('click');  // turn off the map's click listener
-                commentMarker.on('move', onMarkerMove);  // listen for marker movements
-            };
-
-            // update the marker's xy position when the marker is dragged
-            function onMarkerMove(e) {
-                markerLocation = e.latlng;
-            };
-
-        </script>
     </div>
+    <!-- end of map window -->
+
+    
+    <script>
+        // can this be included as a script src?
+
+        // configure Leaflet map
+        var mymap = L.map('mapid', {
+            center: [40.755, -111.88],
+            zoom: 12,
+            minZoom: 10,
+            maxBounds: [
+                [40.9, -112.2],
+                [40.6, -111.7]
+            ],
+            maxBoundsViscosity: 0.5,
+        });
+
+        // disable the input fields until the user clicks the "Place Point Marker" button 
+        // $(".form-control").attr('disabled', 'disabled');
+        
+        // hide the Submit button until user places a point on the map
+        $("#drawMssg").hide();
+        $("#submitBtn").hide();
+        $("#cancelBtn").hide();
+
+        // when user clicks the Place Point Marker button, turn on the form fields and enable the point place event
+        $("#enableDraw").click(function () {
+            // $(".form-control").prop('disabled', false); // enable the form fields
+            mymap.on('click', onMapClick); // turn on the listening event and set handler for placing a point
+
+            // change the available buttons on the form, while user is placing a point
+            $("#enableDraw").hide();
+            $("#submitBtn").show();
+            $("#cancelBtn").show();
+            $("#drawMssg").show();
+            $("#mapid").css('cursor', 'crosshair');
+        });
+
+        // ESRI basemap
+        // L.esri.basemapLayer("Topographic").addTo(mymap);
+
+        // Mapbox basemap
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            maxZoom: 20,
+            id: 'mapbox.streets',
+            accessToken: 'pk.eyJ1IjoiYXV0aGFsaWMiLCJhIjoiSHppSDJlWSJ9.h8QdzKDNKE1p_XDuzIBoSg',
+        }).addTo(mymap);
+
+        // ESRI search widget
+        var searchControl = L.esri.Geocoding.geosearch().addTo(mymap);
+        var results = L.layerGroup().addTo(mymap);
+        searchControl.on('results', function (data) {
+            results.clearLayers();
+            for (var i = data.results.length - 1; i >= 0; i--) {
+                /*  Change the appearance of the marker here, so it doesn't look like others on map */
+                results.addLayer(L.marker(data.results[i].latlng));
+            }
+        });
+
+        // circle marker styling
+        var geojsonMarkerStyling = {
+            radius: 12,
+            fillColor: "#ff7800",
+            color: "#000",
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
+        };
+
+        // go to town with Django template tags and context variables
+        {% for subject in subjects %}
+
+            // check if the Subject has a spatial location (some may be unattached to a point)
+            {% if subject.coordinates %}
+
+                // create a new circleMarker for each existing Issue/Subject
+                var marker = L.circleMarker( [ {{ subject.lat }}, {{ subject.lon }} ], geojsonMarkerStyling );
+
+                // Get each marker's individual details
+                subjectURL = "{% url 'subject-detail' subject.pk %}"
+
+                // build the popup contents
+                marker.bindPopup("<h4>{{ subject.contact }}</h4>"
+                    + "<a href='" + subjectURL + "'>Subject: {{ subject.summary }}</a><br><br>"
+                    + "{{ subject.get_comments.count }} comment{{ subject.get_comments.count |pluralize}} on this subject<br><br>"
+                    + "First Reported: {{ subject.initial_date }}<br>"
+                    + "Last Activity:  {{ subject.last_activity }}"
+                );
+                marker.bindTooltip("<b> {{ subject.contact }} </b><br> {{ subject.summary }} ")
+                marker.addTo(mymap);
+
+            {% endif %}
+        {% endfor %}
+
+        // when the marker's popup opens, close any open tooltips
+
+
+        // store the current coordinates of the placed marker
+        var markerLocation;
+
+        // obtain the marker's initial position
+        function onMapClick(e) {
+            markerLocation = e.latlng;
+
+            commentMarker = new L.marker(e.latlng, {
+                draggable: true
+            });
+
+            mymap.addLayer(commentMarker);           // graphic layer storing the dropped point.  Use this to remove the point later.
+            mymap.off('click');                      // turn off the map's click listener
+            commentMarker.on('move', onMarkerMove);  // listen for marker movements
+        };
+
+        // update the marker's xy position when the marker is dragged
+        function onMarkerMove(e) {
+            markerLocation = e.latlng;
+        };
+
+    </script>
 </div>
 
 {% endblock %}

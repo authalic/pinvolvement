@@ -20,14 +20,10 @@ def workflow(request):
 
     if request.method == 'POST':
 
-        contact_form = ContactForm(request.POST, prefix="contact")
         subject_form = SubjectForm(request.POST, prefix="contact")
-        comment_form = CommentForm(request.POST, prefix="comment")
 
         if all([
-            contact_form.is_valid(),
             subject_form.is_valid(),
-            comment_form.is_valid()
             ]):
 
             # should each model be tested to see if an object currently exists?
@@ -48,13 +44,12 @@ def workflow(request):
             HttpResponseRedirect('/contacts/index.html')
         else:
             HttpResponse('Error!!!!')
-    else:
-        context = {
-            'subjects': Subject.objects.all(),
-            'contact_form': ContactForm(prefix="contact"),
-            'subject_form': SubjectForm(prefix="subject"),
-            'comment_form': CommentForm(prefix="comment"),
-        }
+
+    context = {
+        'contacts': Contact.objects.all(),
+        'subjects': Subject.objects.all(),
+        'subject_form': SubjectForm(prefix="subject"),
+    }
 
     return render(request, 'contacts/index.html', context)
 
