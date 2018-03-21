@@ -3,7 +3,7 @@
 <div class="card">
     <div class="card-body">
 
-        <h5 class="card-title">Front Form</h5>
+        <h5 class="card-title">Search Form</h5>
 
         <form class="form" id="commentform" action="" method="post">
 
@@ -13,7 +13,7 @@
 
             <div class="form-group">
                 <div class="input-group">
-                    <input type="text" class="form-control autocomplete" id="nameSearchField" placeholder="Search by name" />
+                    <input type="text" class="form-control autocomplete" id="nameSearchField" placeholder="Search Person" />
                 </div>
             </div>
 
@@ -47,6 +47,8 @@
 <script>
     $(function () {
 
+        console.log('{{ contacts.objects.all }}');
+
         var contactList = []; // array of Contact names (first and last) as strings
         var contactIDs = {};  // object of {name : uuid} pairs
         var topicsList = ["<option value='placeholder' selected disabled>Topics</option>"];  // list of Topics associated with a Contact/Person 
@@ -59,13 +61,22 @@
             console.log("create a new contact");
         };
 
+
         function showContactInfo(contactID) {
             // populate the contactInfo div with Contact/Person's info
 
-            $("#contactInfo").append(
-                " <p>" + contactID + "</p>"
-            );
-
+            // loop through Contacts/People, check if their Contact.id matches the current Contact's id
+            {% for contact in contacts %}
+                if (contactID == '{{ contact.id }}') {
+                    $("#contactInfo").empty().append(
+                        "<table class='table'>" + 
+                            "<tr><th>Addr</th><td>" + "{{ contact.address1 }}" + "</td></tr>" +
+                            "<tr><th>Phone</th><td>" + "{{ contact.phone }}" + "</td></tr>" +
+                            "<tr><th>Email</th><td>" + "{{ contact.email }}" + "</td></tr>" +
+                        "</table>"
+                    );
+                }
+            {% endfor %}
         };
 
         function addTopics(contactName) {
@@ -118,6 +129,9 @@
                     showContactInfo(contactID);
 
                 } else {
+                // remove any displayed contact/person info
+                $("#contactInfo").empty();
+                
                 // present the form fields to create a new Contact
                 createNewContact(contactName);
                 }

@@ -65,7 +65,7 @@ class Contact(models.Model):  # AKA:  Person
     def get_comments(self):
         return Comment.objects.filter(contact=self.pk)
     
-    def get_subjects(self):  # this isn't working correctly. Returning incomplete lists.
+    def get_subjects(self):  # this isn't working correctly. Returning incomplete lists???
         return Subject.objects.filter(contact=self.pk)
 
     def get_absolute_url(self):
