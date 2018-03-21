@@ -120,7 +120,7 @@
             // build the dictionary/object of all topic descriptions and uuids
             {% for subject in subjects %}
                 topicList.push("<option>" + "{{ subject.summary }}" + "</option>");
-                topicIDs['{{ subject }}'] = '{{ subject.id }}';
+                topicIDs['{{ subject }}'] = {"subjectId": '{{ subject.id }}', "latlon": [ {{ subject.lat }}, {{ subject.lon }} ] };
             {% endfor %}
 
             // populate the Topic/Subject dropdown list with the array just created
@@ -224,7 +224,13 @@
             topicDesc =  $("#subjectPicker").val();
 
             // get the uuid of the Subject/Topic
-            var topicID = topicIDs[topicDesc];
+            var topicID = topicIDs[topicDesc].subjectId;
+
+            // fly the map to the location of this Topic/Subject
+            var latlon = topicIDs[topicDesc].latlon;
+            zoomToLatLon(latlon);
+
+            // display the topic back-and-forth comment thread
             showTopicThread(topicID);
         };
 
