@@ -20,7 +20,6 @@
             <div class="form-group">
                 <div class="input-group">
                     <select class="form-control" id="subjectPicker">
-                        <option value="placeholder" selected>Existing Topics</option>
                     </select>
                 </div>
             </div>
@@ -40,11 +39,9 @@
 <script>
     $(function () {
 
-        var contactList = [];  // array of Contact names (first and last) as strings
-        var contactIDs = {};   // object of {name : uuid} pairs
-        var optionsList = [];
-
-        $("#subjectPicker").attr('disabled', 'disabled');
+        var contactList = []; // array of Contact names (first and last) as strings
+        var contactIDs = {};  // object of {name : uuid} pairs
+        var topicsList = ["<option value='placeholder' selected disabled>Topics</option>"];  // list of Topics associated with a Contact/Person 
 
         // when a name is entered...
         // show list of topics below it, if that person is in Contacts list
@@ -55,31 +52,53 @@
         };
 
         function addTopics(contactName) {
-            // add the selected user's topics to the dropdown list
-
+            
             // enable the Subject dropdown list
             $("#subjectPicker").prop('disabled', false);
 
+            {% for subject in subjects %}
+                topicsList.push("<option>" + "{{ subject.summary }}" + "</option>");
+            {% endfor %}
+
+            $("#subjectPicker").html(topicsList);
+
             // check if the contactName is an existing Contact
-            if (contactName in contactIDs) {
+            if (contactName != null) {
+                if (contactName in contactIDs) {
+                    // add the selected contact's topics to the dropdown list
 
-                var contactID = contactIDs[contactName];
-
-                console.log(contactID);
-
-                // add this user's topics to a list
-                {% for subject in subjects %}
-                    if (contactID == '{{ subject.contact.id }}') {
-                        optionsList.push("<option>" + "{{ subject.summary }}" + "</option>");
+                    // clear any existing options of the Subject/Topic dropdown
+                    $("#subjectPicker").empty();
+                    
+                    // get the uuid of the Person/Contact
+                    var contactID = contactIDs[contactName];
+    
+                    // add/filter this contact's topics to a list
+                    // this should probably search all comments, in case a Person has commented on a Topic
+                    // that he/she didn't originate.
+                    // is this a likely case scenario ???
+    
+                    // clear the options list
+                    topicsList = [];
+    
+                    // loop through Subjects/Topics, check if their Contact.id matches the current Contact's id
+                    {% for subject in subjects %}
+                        if (contactID == '{{ subject.contact.id }}') {
+                            topicsList.push("<option>" + "{{ subject.summary }}" + "</option>");
+                        }
+                    {% endfor %}
+    
+                    // populate the dropdown element with the contents of topicsList, or disable the dropdown
+    
+                    if (topicsList.length > 0) {
+                        $("#subjectPicker").html(topicsList);
+                    } else {
+                        $("#subjectPicker").attr('disabled', 'disabled');
                     }
-                {% endfor %}
-
-                // populate the dropdown element with the contents of optionsList
-                $("#subjectPicker").html(optionsList);
-
-            } else {
+                } else {
                 // present the form fields to create a new Contact
                 createNewContact(contactName);
+                }
             }
         };
 
@@ -90,8 +109,6 @@
                 contactList.push('{{ contact }}');
                 contactIDs['{{ contact}}'] = '{{ contact.id }}';
             {% endfor %}
-
-            console.log(contactIDs);
 
             var contactNames = contactList;
 
@@ -120,6 +137,9 @@
 
         // add a search button here
 
+        // initialize the dropdown lists
         addContactsToDropdown();
+        addTopics();
+
     });
 </script>
