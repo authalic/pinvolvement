@@ -36,10 +36,10 @@
                     <a class="nav-link active" id="topics-tab" data-toggle="tab" href="#topics" role="tab">Topics</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="history-tab" data-toggle="tab" href="#history">History</a>
+                    <a class="nav-link" id="test-tab" data-toggle="tab" href="#test">Test</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact">Contact</a>
+                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contactList">Contact List</a>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -55,8 +55,7 @@
                 </div>
 
                 <!-- Tab 2-->
-                <div class="tab-pane fade" id="history" role="tabpanel">
-                    
+                <div class="tab-pane fade" id="test" role="tabpanel">
                     <!-- jQueryUI Datepicker Test -->
 
                     <p> Date: <input type="text" id="datepicker"></p>
@@ -69,10 +68,39 @@
                 </div>
 
                 <!-- Tab 3 -->
-                <div class="tab-pane fade" id="contact" role="tabpanel">
-                    Tab 3 content
-                </div>
+                <div class="tab-pane fade" id="contactList" role="tabpanel">
+                    <div id="accordion">
 
+                        {% for contact in contacts %}
+
+                        <div class="card">
+                            <div class="card-header" id="heading_{{ forloop.counter }}">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_{{ forloop.counter }}" >
+                                        {{ contact.first_name }} {{ contact.last_name }}
+                                    </button>
+                                </h5>
+                            </div>
+                            <div id="collapse_{{ forloop.counter }}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                                <div class="card-body">
+                                    <table class='table'>
+                                        <tr><td class="orgtitle"> {{ contact.org_title }} </td><td class="orgtitle"> {{ contact.organization }} </td></tr>
+                                        <tr><th>Address</th><td> {{ contact.address1 }} {{ contact.address2 }} </td></tr>
+                                        <tr><th></th><td> {{ contact.city }}, {{ contact.state }} {{ contact.zipcode }} </td></tr>
+                                        <tr><th>Phone</th><td> {{ contact.phone }} </td></tr>
+                                        <tr><th>email</th><td> {{ contact.email }} </td></tr>
+                                        <tr><th>Note</th><td> {{ contact.textnote }} </td></tr>
+                                    </table>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endfor %}
+                    </div>
+
+
+                </div>
             </div>
         </div>
     </div>
@@ -101,6 +129,13 @@
             ],
             maxBoundsViscosity: 0.5,
         });
+
+
+        // pan and zoom to the location of Subject/Topic
+        // latlon parameter is an array: [lat, lon]
+        function zoomToLatLon(latlon) {
+            mymap.flyTo(latlon, 22);
+        };
 
         // disable the input fields until the user clicks the "Place Point Marker" button 
         // $(".form-control").attr('disabled', 'disabled');

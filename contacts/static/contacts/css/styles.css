@@ -56,3 +56,13 @@ th {
     padding: 4px;
     height: 600px;
 }
+
+.tab-content {
+    max-height: 540px;
+    overflow-y: scroll;
+}
+
+.orgtitle {
+    color: darkgrey;
+    font-size: 0.9rem;
+}
