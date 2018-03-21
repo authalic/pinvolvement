@@ -81,21 +81,38 @@
                             "<h5>Comment History</h5> "
                         );
 
+                        $("#messageStream").append( '<div class="container">');
+
                         {% for comment in subject.get_comments %}
                             {% if comment.is_incoming %}
                                 var comm = "{{ comment.commentxt|safe }}";
-                                $("#messageStream").append('<div class="card bg-light mb-3">');
-                                $("#messageStream").append('<div class="card-body">');
-                                $("#messageStream").append('<h5 class="card-title">{{ comment.timestamp }}</h5>');
-                                $("#messageStream").append('<p class="card-text">' + comm + '</p>');
-                                $("#messageStream").append('</div></div>');
+
+                                $("#messageStream").append(
+                                    '<div class="row">' +
+                                        '<div class="col-sm-10">' +
+                                            '<div class="card border-dark">' +
+                                                '<div class="card-header">{{ comment.contact }}</div>' +
+                                                '<div class="card-body">' +
+                                                    '<div class="card-title">{{ comment.timestamp }}</div>' +
+                                                    '<p class="card-text">' + comm + '</p>' + 
+                                                '</div>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>');
                             {% else %}
                                 var comm = "{{ comment.commentxt|safe }}";
-                                $("#messageStream").append('<div class="card text-white bg-primary mb-3">');
-                                $("#messageStream").append('<div class="card-body">');
-                                $("#messageStream").append('<h5 class="card-title">{{ comment.timestamp }}</h5>');
-                                $("#messageStream").append('<p class="card-text">' + comm + '</p>');
-                                $("#messageStream").append('</div></div>');
+                                $("#messageStream").append(
+                                    '<div class="row">' +
+                                        '<div class="col-sm-10 offset-sm-2">' +
+                                            '<div class="card border-dark">' +
+                                                '<div class="card-header text-right">{{ comment.employee.first_name }} {{ comment.employee.last_name }}' +
+                                                '<div class="card-body">' +
+                                                    '<div class="card-title text-right">{{ comment.timestamp }}</div>' +
+                                                    '<p class="card-text text-right">'  + comm + '</p>' +
+                                                '</div>' +
+                                            '</div>' +
+                                        '</div>' +
+                                    '</div>');
                             {% endif %}
                         {% endfor %}    
                     {% else %}
