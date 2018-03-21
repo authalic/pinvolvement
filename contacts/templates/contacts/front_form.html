@@ -18,7 +18,6 @@
             </div>
 
             <div class="container" id="contactInfo">
-
             </div>
 
             <div class="form-group">
@@ -29,17 +28,7 @@
             </div>
 
             <div class="container" id="messageStream">
-
             </div>
-
-            <!-- buttons -->
-            <div class="form-group">
-                <button id="enableDraw" class="btn btn-primary" data-toggle="button" tabindex="2">Place Point Marker</button>
-                <button id="submitBtn" class="btn btn-primary" type="submit">Submit</button>
-                <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
-                <p style="font-size: 80%;" id="drawMssg">Click the map to place a point</p>
-            </div>
-
         </form>
     </div>
 </div>
@@ -47,11 +36,11 @@
 <script>
     $(function () {
 
-        console.log('{{ contacts.objects.all }}');
-
         var contactList = []; // array of Contact names (first and last) as strings
         var contactIDs = {};  // object of {name : uuid} pairs
-        var topicsList = ["<option value='placeholder' selected disabled>Topics</option>"];  // list of Topics associated with a Contact/Person 
+        var topicList = ["<option value='placeholder' selected disabled>Topics</option>"];  // list of Topics associated with a Contact/Person 
+        var topicIDs = {}; // object of {topic : uuid} pairs
+
 
         // when a name is entered...
         // show list of topics below it, if that person is in Contacts list
@@ -79,16 +68,64 @@
             {% endfor %}
         };
 
-        function addTopics(contactName) {
-            
-            // enable the Subject dropdown list
-            $("#subjectPicker").prop('disabled', false);
+        
+
+        function showTopicThread(topicID) {
+            // get the specific Subject/Topic/Thread/Conversation
 
             {% for subject in subjects %}
-                topicsList.push("<option>" + "{{ subject.summary }}" + "</option>");
+                if (topicID == '{{ subject.id }}') {
+
+                    {% if subject.get_comments %}
+                        $("#messageStream").append( 
+                            "<h5>Comment History</h5> "
+                        );
+
+                        {% for comment in subject.get_comments %}
+                            {% if comment.is_incoming %}
+                                var comm = "{{ comment.commentxt|safe }}";
+                                $("#messageStream").append('<div class="card bg-light mb-3">');
+                                $("#messageStream").append('<div class="card-body">');
+                                $("#messageStream").append('<h5 class="card-title">{{ comment.timestamp }}</h5>');
+                                $("#messageStream").append('<p class="card-text">' + comm + '</p>');
+                                $("#messageStream").append('</div></div>');
+                            {% else %}
+                                var comm = "{{ comment.commentxt|safe }}";
+                                $("#messageStream").append('<div class="card text-white bg-primary mb-3">');
+                                $("#messageStream").append('<div class="card-body">');
+                                $("#messageStream").append('<h5 class="card-title">{{ comment.timestamp }}</h5>');
+                                $("#messageStream").append('<p class="card-text">' + comm + '</p>');
+                                $("#messageStream").append('</div></div>');
+                            {% endif %}
+                        {% endfor %}    
+                    {% else %}
+                        $("#messageStream").append("<p>No Comment History</p>");
+                    {% endif %}
+                }
+
+            {% endfor %}   
+
+        };
+
+
+        function addTopics(contactName) {
+
+            // input is the name of a person, in the format used to print the Contact object
+            // i.e. the String returned from Contact.__str__() in the model
+            
+            // enable the Subject/Topic dropdown list
+            $("#subjectPicker").prop('disabled', false);
+
+            // build the array of all existing topic descriptions
+            // build the dictionary/object of all topic descriptions and uuids
+            {% for subject in subjects %}
+                topicList.push("<option>" + "{{ subject.summary }}" + "</option>");
+                topicIDs['{{ subject }}'] = '{{ subject.id }}';
             {% endfor %}
 
-            $("#subjectPicker").html(topicsList);
+            // populate the Topic/Subject dropdown list with the array just created
+            // should include all topics at this point, since no Contact/Person is selected
+            $("#subjectPicker").html(topicList);
 
             // check if the contactName is an existing Contact
             if (contactName != null) {
@@ -98,28 +135,33 @@
                     // clear any existing options of the Subject/Topic dropdown
                     $("#subjectPicker").empty();
                     
-                    // get the uuid of the Person/Contact
+                    // get the uuid of the Person/Contact submitted as the argument
                     var contactID = contactIDs[contactName];
-    
+
                     // add/filter this contact's topics to a list
-                    // this should probably search all comments, in case a Person has commented on a Topic
+                    // this could probably search all comments, in case a Person has commented on a Topic
                     // that he/she didn't originate.
                     // is this a likely case scenario ???
     
                     // clear the options list
-                    topicsList = [];
+                    topicList = [];
     
                     // loop through Subjects/Topics, check if their Contact.id matches the current Contact's id
+                    // add matching Topics to the topicList array
                     {% for subject in subjects %}
                         if (contactID == '{{ subject.contact.id }}') {
-                            topicsList.push("<option>" + "{{ subject.summary }}" + "</option>");
+                            topicList.push("<option>" + "{{ subject.summary }}" + "</option>");
                         }
                     {% endfor %}
     
-                    // populate the dropdown element with the contents of topicsList, or disable the dropdown
+                    // populate the dropdown element with the contents of topicList, or disable the dropdown
     
-                    if (topicsList.length > 0) {
-                        $("#subjectPicker").html(topicsList);
+                    if (topicList.length > 0) {
+                        $("#subjectPicker").html(topicList);
+
+                        // update the topic thread here, using the first new topic just added to the Topics list 
+                        updateTopicThread();
+
                     } else {
                         $("#subjectPicker").attr('disabled', 'disabled');
                     }
@@ -131,7 +173,7 @@
                 } else {
                 // remove any displayed contact/person info
                 $("#contactInfo").empty();
-                
+
                 // present the form fields to create a new Contact
                 createNewContact(contactName);
                 }
@@ -150,12 +192,13 @@
 
             // autocomplete in the Name field
             // uses jQueryUI to set the values:  http://api.jqueryui.com/autocomplete/
-
+            // populates the Contact/Person dropdown list with full names of each record in the Contacts table
             $(".autocomplete").autocomplete({
                 delay: 500,
                 source: contactNames,
                 select: function (e, ui) {
                     // when a value is selected from the dropdown list, a ui object is returned with the selected value
+                    // i.e.  when the name changes in the Contact/Person list, use it to update the Topics  list
                     addTopics(ui.item.value);
                 }
             });
@@ -171,7 +214,22 @@
             };
         });
 
-        // add a search button here
+            
+        function updateTopicThread() {
+
+            // clear out thte conversation history
+            $("#messageStream").empty();
+
+            // get the selected topic
+            topicDesc =  $("#subjectPicker").val();
+
+            // get the uuid of the Subject/Topic
+            var topicID = topicIDs[topicDesc];
+            showTopicThread(topicID);
+        };
+
+        // listen for change of Topic in the Topic/Subject dropdown list
+        $("#subjectPicker").change(updateTopicThread);
 
         // initialize the dropdown lists
         addContactsToDropdown();
