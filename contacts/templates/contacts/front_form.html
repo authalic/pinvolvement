@@ -17,11 +17,19 @@
                 </div>
             </div>
 
+            <div class="container" id="contactInfo">
+
+            </div>
+
             <div class="form-group">
                 <div class="input-group">
                     <select class="form-control" id="subjectPicker">
                     </select>
                 </div>
+            </div>
+
+            <div class="container" id="messageStream">
+
             </div>
 
             <!-- buttons -->
@@ -49,6 +57,15 @@
 
         function createNewContact(contactName) {
             console.log("create a new contact");
+        };
+
+        function showContactInfo(contactID) {
+            // populate the contactInfo div with Contact/Person's info
+
+            $("#contactInfo").append(
+                " <p>" + contactID + "</p>"
+            );
+
         };
 
         function addTopics(contactName) {
@@ -95,6 +112,11 @@
                     } else {
                         $("#subjectPicker").attr('disabled', 'disabled');
                     }
+
+                    // show the Contact's info below the dropdown list
+
+                    showContactInfo(contactID);
+
                 } else {
                 // present the form fields to create a new Contact
                 createNewContact(contactName);
