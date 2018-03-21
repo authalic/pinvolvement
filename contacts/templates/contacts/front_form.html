@@ -1,89 +1,125 @@
-
 <!-- this is the form that appears on the main tab -->
 
-    <div class="card">
-        <div class="card-body">
+<div class="card">
+    <div class="card-body">
 
-            <h5 class="card-title">Front Form</h5>
+        <h5 class="card-title">Front Form</h5>
 
-            <form class="form" id="commentform" action="" method="post">
+        <form class="form" id="commentform" action="" method="post">
 
-                {% csrf_token %}
+            {% csrf_token %}
 
-                <!-- {{ subject_form.summary }} -->
-                
-                <div class="form-group">
+            <!-- {{ subject_form.summary }} -->
 
-                    <input type="text" class="form-control autocomplete" id="nameSearchField" placeholder="Search by name" tabindex="1"/>
-
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text" class="form-control autocomplete" id="nameSearchField" placeholder="Search by name" />
                 </div>
+            </div>
 
-                      
-                <!-- buttons -->
-
-                <div class="form-group">
-
-                        <button id="enableDraw" class="btn btn-primary" data-toggle="button" tabindex="2">Place Point Marker</button>
-                        <button id="submitBtn" class="btn btn-primary" type="submit">Submit</button>
-                        <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
-                        <p style="font-size: 80%;" id="drawMssg">Click the map to place a point</p>
+            <div class="form-group">
+                <div class="input-group">
+                    <select class="form-control" id="subjectPicker">
+                        <option value="placeholder" selected>Existing Topics</option>
+                    </select>
                 </div>
+            </div>
 
+            <!-- buttons -->
+            <div class="form-group">
+                <button id="enableDraw" class="btn btn-primary" data-toggle="button" tabindex="2">Place Point Marker</button>
+                <button id="submitBtn" class="btn btn-primary" type="submit">Submit</button>
+                <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                <p style="font-size: 80%;" id="drawMssg">Click the map to place a point</p>
+            </div>
 
-            </form>
-
-            <script>
-                    $(function () {
-
-                        // when a name is entered...
-                        // show list of topics below, if person is in Contacts list
-                        // display form to create new person, if not in Contacts lists
-
-                        function populateConversationHistory(contactName) {
-                            console.log(contactName);
-
-                        };
-                        
-
-                        // populate the dropdown list with all the names in the Contacts list
-                        function addContactsToDropdown() {
-                            var contactList = [];
-
-                            {% for contact in contacts %}
-                               contactList.push('{{ contact }}');
-                            {% endfor %}
-    
-                            var contactNames = contactList;
-                            
-                            // autocomplete in the Name field
-                            // uses jQueryUI to set the values:  http://api.jqueryui.com/autocomplete/
-
-                            $(".autocomplete").autocomplete({
-                                delay: 500,
-                                source: contactNames,
-                                select: function(e, ui) {
-                                    // when a value is selected from the dropdown list, a ui object is returned with the selected value
-                                    populateConversationHistory(ui.item.value);                                 }
-                            });
-                        };
-
-
-
-                        // submitting a search
-                        // handle pressing the Enter key inside the search field
-                        $("#nameSearchField").on("keypress", function (e) {
-                            
-                            if (e.keyCode === 13) {
-                                e.preventDefault();  // prevent the default Enter Key response, or it will also set off the buttons
-                                populateConversationHistory($("#nameSearchField").val());
-                            };
-                        });
-
-                        // add a search button here
-
-
-                        addContactsToDropdown();
-                    });
-            </script>
-        </div>
+        </form>
     </div>
+</div>
+
+<script>
+    $(function () {
+
+        var contactList = [];  // array of Contact names (first and last) as strings
+        var contactIDs = {};   // object of {name : uuid} pairs
+        var optionsList = [];
+
+        $("#subjectPicker").attr('disabled', 'disabled');
+
+        // when a name is entered...
+        // show list of topics below it, if that person is in Contacts list
+        // display form to create new person, if not in Contacts lists
+
+        function createNewContact(contactName) {
+            console.log("create a new contact");
+        };
+
+        function addTopics(contactName) {
+            // add the selected user's topics to the dropdown list
+
+            // enable the Subject dropdown list
+            $("#subjectPicker").prop('disabled', false);
+
+            // check if the contactName is an existing Contact
+            if (contactName in contactIDs) {
+
+                var contactID = contactIDs[contactName];
+
+                console.log(contactID);
+
+                // add this user's topics to a list
+                {% for subject in subjects %}
+                    if (contactID == '{{ subject.contact.id }}') {
+                        optionsList.push("<option>" + "{{ subject.summary }}" + "</option>");
+                    }
+                {% endfor %}
+
+                // populate the dropdown element with the contents of optionsList
+                $("#subjectPicker").html(optionsList);
+
+            } else {
+                // present the form fields to create a new Contact
+                createNewContact(contactName);
+            }
+        };
+
+        // populate the Contact (people) dropdown list with all the names in the Contacts list
+        function addContactsToDropdown() {
+
+            {% for contact in contacts %}
+                contactList.push('{{ contact }}');
+                contactIDs['{{ contact}}'] = '{{ contact.id }}';
+            {% endfor %}
+
+            console.log(contactIDs);
+
+            var contactNames = contactList;
+
+            // autocomplete in the Name field
+            // uses jQueryUI to set the values:  http://api.jqueryui.com/autocomplete/
+
+            $(".autocomplete").autocomplete({
+                delay: 500,
+                source: contactNames,
+                select: function (e, ui) {
+                    // when a value is selected from the dropdown list, a ui object is returned with the selected value
+                    addTopics(ui.item.value);
+                }
+            });
+        };
+
+        // submitting a search
+        // handle pressing the Enter key inside the search field
+
+        $("#nameSearchField").on("keypress", function (e) {
+            if (e.keyCode === 13) {
+                e.preventDefault();  // prevent the default Enter Key response, or it will also set off the buttons
+                addTopics($("#nameSearchField").val());
+            };
+        });
+
+        // add a search button here
+
+        addContactsToDropdown();
+    });
+</script>
