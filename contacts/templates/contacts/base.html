@@ -35,16 +35,15 @@
     {% block leafletheaders %}
     {% endblock %}
 
-    <!-- load the project-specific CSS from the static files -->    
-    <link rel='stylesheet' href='{% static "contacts/css/styles.css" %}'>
-    
+
     {% block title %}
     <title>Document</title>
     {% endblock %}
     
-    <!-- add css file from static files -->
-
     {% block headerstyle %}{% endblock %}
+
+    <!-- load the project-specific CSS from the static files -->    
+    <link rel='stylesheet' href='{% static "contacts/css/styles.css" %}'>
 
 </head>
 
@@ -65,13 +64,13 @@
                     <a class="nav-link" href="{% url 'index' %}">Main Map</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'contacts' %}">Contacts</a>
+                    <a class="nav-link" href="{% url 'contacts' %}">Persons</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'organizations' %}">Organizations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'subjects' %}">Subjects</a>
+                    <a class="nav-link" href="{% url 'subjects' %}">Topics</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'comments' %}">Comments</a>
