@@ -25,8 +25,8 @@ div.card-header {
     padding: 0.5rem;
 }
 
-h5.card-title {
-    font-size: 0.8rem;
+div.card-title {
+    font-size: 0.6rem;
 }
 
 div.card-body {
