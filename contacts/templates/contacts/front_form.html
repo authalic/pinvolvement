@@ -31,9 +31,21 @@
 
 
             </form>
+
             <script>
                     $(function () {
 
+                        // when a name is entered...
+                        // show list of topics below, if person is in Contacts list
+                        // display form to create new person, if not in Contacts lists
+
+                        function populateConversationHistory(contactName) {
+                            console.log(contactName);
+
+                        };
+                        
+
+                        // populate the dropdown list with all the names in the Contacts list
                         function addContactsToDropdown() {
                             var contactList = [];
 
@@ -42,18 +54,22 @@
                             {% endfor %}
     
                             var contactNames = contactList;
-    
+                            
+                            // autocomplete in the Name field
+                            // uses jQueryUI to set the values:  http://api.jqueryui.com/autocomplete/
+
                             $(".autocomplete").autocomplete({
-                                source: contactNames
+                                delay: 500,
+                                source: contactNames,
+                                select: function(e, ui) {
+                                    // when a value is selected from the dropdown list, a ui object is returned with the selected value
+                                    populateConversationHistory(ui.item.value);                                 }
                             });
-
                         };
 
-                        function populateConversationHistory(contactName) {
-                            console.log(contactName);
 
-                        };
 
+                        // submitting a search
                         // handle pressing the Enter key inside the search field
                         $("#nameSearchField").on("keypress", function (e) {
                             
@@ -62,6 +78,9 @@
                                 populateConversationHistory($("#nameSearchField").val());
                             };
                         });
+
+                        // add a search button here
+
 
                         addContactsToDropdown();
                     });
