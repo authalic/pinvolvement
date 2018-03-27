@@ -66,6 +66,7 @@ th {
 .tabarea {
     background-color: #dddddd;
     padding: 4px;
+    padding-top: 8px;
     height: 600px;
 }
 
@@ -77,4 +78,8 @@ th {
 .orgtitle {
     color: darkgrey;
     font-size: 0.9rem;
+}
+
+#searchFormTitle {
+    margin-top: 12px;
 }

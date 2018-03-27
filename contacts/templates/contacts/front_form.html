@@ -3,7 +3,7 @@
 <div class="card">
     <div class="card-body">
 
-        <h5 class="card-title">Search Form</h5>
+        <h5 class="card-title" id="searchFormTitle">Individual Search Form</h5>
 
         <form class="form" id="commentform" action="" method="post">
 
@@ -17,29 +17,38 @@
                 </div>
             </div>
 
-            <div class="container" id="contactInfo">
-            </div>
 
-            <div class="form-group">
-                <div class="input-group">
-                    <select class="form-control" id="subjectPicker">
-                    </select>
+            <!-- Display the selected Contact information here -->
+            <div id="contactInfo"></div>
+
+           <!-- Accordion List:  Here goes -->
+           <div id="topicAccordion"></div>
+
+
+            <!-- input fields. Hidden until the "Place Point Marker" button is activated -->
+            <div class="container" id="inputPersonForm">
+                <div class="row">
+                    <div class="col">
+                        <label for="addFirstName" class="sr-only">First Name</label>
+                        <input type="text" class="form-control" id="addFirstName" placeholder="First Name" />
+                    </div>
+                    <div class="col">
+                        <label for="addLastName" class="sr-only">Last Name</label>
+                        <input type="text" class="form-control" id="addLastName" placeholder="Last Name" />
+                    </div>
                 </div>
-            </div>
-
-            <div class="container" id="messageStream">
             </div>
 
 
             <!-- Drop a Point (relocate this to another tab?) -->
             <div class="form-group">
 
-                    <button id="enableDraw" class="btn btn-primary" data-toggle="button" tabindex="2">Place Point Marker</button>
-                    <button id="submitBtn" class="btn btn-primary" type="submit">Submit</button>
-                    <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
-                    <p style="font-size: 80%;" id="drawMssg">Click the map to place a point</p>
-            </div>
+                <button id="enableDraw" class="btn btn-primary" data-toggle="button">Place Point Marker</button>
+                <button id="submitBtn" class="btn btn-primary" type="submit">Submit</button>
+                <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
 
+                <p style="font-size: 80%;" id="drawMssg">Click the map to place a point</p>
+            </div>
         </form>
     </div>
 </div>
@@ -49,164 +58,179 @@
 
         var contactList = []; // array of Contact names (first and last) as strings
         var contactIDs = {};  // object of {name : uuid} pairs
-        var topicList = ["<option value='placeholder' selected disabled>Topics</option>"];  // list of Topics associated with a Contact/Person 
+        var topicList = [];  // list of Topics associated with a Contact/Person 
         var topicIDs = {}; // object of {topic : uuid} pairs
 
-
-        // when a name is entered...
-        // show list of topics below it, if that person is in Contacts list
-        // display form to create new person, if not in Contacts lists
-
+        // create a new contact using the form inputs
         function createNewContact(contactName) {
+            // this is where the form fields will be POSTed to the django View, and a new Contact object created
+
             console.log("create a new contact");
         };
 
+        // when a name is entered...
+        // show an Accordion list topics below it, if that person is in Contacts list, or
+        // display form to create new person, if not in Contacts lists
 
         function showContactInfo(contactID) {
-            // populate the contactInfo div with Contact/Person's info
+            // populate the #contactInfo div with Contact/Person's info
 
-            // loop through Contacts/People, check if their Contact.id matches the current Contact's id
+            // loop through Contacts/People, check if their Contact.id matches the contactID argument
             {% for contact in contacts %}
                 if (contactID == '{{ contact.id }}') {
                     $("#contactInfo").empty().append(
-                        "<table class='table'>" + 
-                            "<tr><th>Addr</th><td>" + "{{ contact.address1 }}" + "</td></tr>" +
+                        "<table class='table'>" +
+                            "<tr><th colspan='2'><h4>{{ contact }}</h4></th><td>" +
+                            "<tr><th>Address</th><td>" + "{{ contact.address1 }} {{ contact.address2 }}" + "</td></tr>" +
                             "<tr><th>Phone</th><td>" + "{{ contact.phone }}" + "</td></tr>" +
                             "<tr><th>Email</th><td>" + "{{ contact.email }}" + "</td></tr>" +
                         "</table>"
                     );
                 }
             {% endfor %}
+
+            console.log("Huh?");
+            $("#nameSearchField").blur();
         };
 
         
-
         function showTopicThread(topicID) {
-            // get the specific Subject/Topic/Thread/Conversation
+            // get the specific Subject/Topic/Thread/Conversation, return the back-and-forth thread of comments
 
+            // add the subjects/topics associated with the selected person
             {% for subject in subjects %}
                 if (topicID == '{{ subject.id }}') {
 
                     {% if subject.get_comments %}
-                        $("#messageStream").append( 
-                            "<h5>Comment History</h5> "
-                        );
 
-                        $("#messageStream").append( '<div class="container">');
+                        var accordionThread = "";
+
+                        accordionThread += '<div class="container">';
 
                         {% for comment in subject.get_comments %}
                             {% if comment.is_incoming %}
+
                                 var comm = "{{ comment.commentxt|safe }}";
 
-                                $("#messageStream").append(
-                                    '<div class="row">' +
-                                        '<div class="col-sm-10">' +
-                                            '<div class="card border-dark">' +
-                                                '<div class="card-header">{{ comment.contact }}</div>' +
-                                                '<div class="card-body">' +
-                                                    '<div class="card-title">{{ comment.timestamp }}</div>' +
-                                                    '<p class="card-text">' + comm + '</p>' + 
-                                                '</div>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</div>');
+                                accordionThread += `
+                                    <div class="row">
+                                        <div class="col-sm-10">
+                                            <div class="card border-dark">
+                                                <div class="card-header">{{ comment.contact }}</div>
+                                                <div class="card-body">
+                                                    <div class="card-title">{{ comment.timestamp }}</div>
+                                                    <p class="card-text">` + comm + `</p> 
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`;
                             {% else %}
+                            
                                 var comm = "{{ comment.commentxt|safe }}";
-                                $("#messageStream").append(
-                                    '<div class="row">' +
-                                        '<div class="col-sm-10 offset-sm-2">' +
-                                            '<div class="card border-primary">' +
-                                                '<div class="card-header bg-info text-white text-right">{{ comment.employee.first_name }} {{ comment.employee.last_name }}</div>' +
-                                                '<div class="card-body text-info">' +
-                                                    '<div class="card-title text-right">{{ comment.timestamp }}</div>' +
-                                                    '<p class="card-text text-right">'  + comm + '</p>' +
-                                                '</div>' +
-                                            '</div>' +
-                                        '</div>' +
-                                    '</div>');
+
+                                accordionThread += `
+                                    <div class="row">
+                                        <div class="col-sm-10 offset-sm-2">
+                                            <div class="card border-primary">
+                                                <div class="card-header bg-info text-white text-right">{{ comment.employee.first_name }} {{ comment.employee.last_name }}</div>
+                                                <div class="card-body text-info">
+                                                    <div class="card-title text-right">{{ comment.timestamp }}</div>
+                                                    <p class="card-text text-right">`  + comm + `</p>
+                                                </div>
+                                            </div>
+                                        </div> +
+                                    </div>`;
                             {% endif %}
-                        {% endfor %}    
+                        {% endfor %}
+                        
+                        return accordionThread;
+
                     {% else %}
-                        $("#messageStream").append("<p>No Comment History</p>");
+                        return "No Comment History";
                     {% endif %}
                 }
-
             {% endfor %}   
-
         };
 
 
         function addTopics(contactName) {
 
-            // input is the name of a person, in the format used to print the Contact object
-            // i.e. the String returned from Contact.__str__() in the model
-            
-            // enable the Subject/Topic dropdown list
-            $("#subjectPicker").prop('disabled', false);
+            // QUESTION:  Is it possible to get here if the user enters anything but an existing Person?
+
+
+            // input is the name of a person, in the format returned from Contact.__str__(self) in the model
 
             // build the array of all existing topic descriptions
-            // build the dictionary/object of all topic descriptions and uuids
+            // build the dictionary/object of all topic descriptions, uuids, and lat/lon point coordinates
+
             {% for subject in subjects %}
-                topicList.push("<option>" + "{{ subject.summary }}" + "</option>");
-                topicIDs['{{ subject }}'] = {"subjectId": '{{ subject.id }}', "latlon": [ {{ subject.lat }}, {{ subject.lon }} ] };
+                topicList.push("{{ subject.summary }}");
+                topicIDs['{{ subject }}'] = { "subjectId": '{{ subject.id }}', "latlon": [{{ subject.lat }}, {{ subject.lon }} ] };
             {% endfor %}
 
-            // populate the Topic/Subject dropdown list with the array just created
-            // should include all topics at this point, since no Contact/Person is selected
-            $("#subjectPicker").html(topicList);
 
-            // check if the contactName is an existing Contact
+            // check if the contactName is an existing Contact.   ??? Is this necessary?
             if (contactName != null) {
                 if (contactName in contactIDs) {
-                    // add the selected contact's topics to the dropdown list
 
                     // clear any existing options of the Subject/Topic dropdown
-                    $("#subjectPicker").empty();
-                    
+                    $("#topicAccordion").empty();
+
+                    // add the selected contact's topics to the accordion
+
                     // get the uuid of the Person/Contact submitted as the argument
                     var contactID = contactIDs[contactName];
 
-                    // add/filter this contact's topics to a list
-                    // this could probably search all comments, in case a Person has commented on a Topic
-                    // that he/she didn't originate.
-                    // is this a likely case scenario ???
-    
-                    // clear the options list
-                    topicList = [];
-    
+                    // add/filter this contact's topics to an object:  {'subject': 'html_for_accordion_slider'}
+                    topics = {};
+
+
                     // loop through Subjects/Topics, check if their Contact.id matches the current Contact's id
                     // add matching Topics to the topicList array
-                    {% for subject in subjects %}
-                        if (contactID == '{{ subject.contact.id }}') {
-                            topicList.push("<option>" + "{{ subject.summary }}" + "</option>");
-                        }
-                    {% endfor %}
-    
-                    // populate the dropdown element with the contents of topicList, or disable the dropdown
-    
-                    if (topicList.length > 0) {
-                        $("#subjectPicker").html(topicList);
+                        {% for subject in subjects %}
+                            if (contactID == '{{ subject.contact.id }}') {
 
-                        // update the topic thread here, using the first new topic just added to the Topics list 
-                        updateTopicThread();
+                                // get the HTML for the back-and-forth comments
+                                commentThread = showTopicThread("{{ subject.id }}");
 
-                    } else {
-                        $("#subjectPicker").attr('disabled', 'disabled');
-                    }
+                                // generate the HTML for each subject's accordion drawer
+                                accordionDrawer = `
+                                    <div class="card">
+                                        <div class="card-header" id="heading_{{ forloop.counter }}">
+                                            <h5 class="mb-0">
+                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_{{ forloop.counter }}">
+                                                    {{ subject }}
+                                                </button>
+                                            </h5>
+                                        </div>
+                                        <div id="collapse_{{ forloop.counter }}" class="collapse" data-parent="#topicAccordion">
+                                            <div class="card-body">
+                                                ` + commentThread + `
+                                            </div>
+                                        </div>
+                                    </div>`
 
-                    // show the Contact's info below the dropdown list
+                                topics[ "{{ subject }}" ] = accordionDrawer;
+                            }
+                        {% endfor %}
 
-                    showContactInfo(contactID);
+                        // return the object containing all of the HTML for the individual accordion drawers
+                        return topics;
 
                 } else {
-                // remove any displayed contact/person info
-                $("#contactInfo").empty();
+                        $("#topicAccordion").hide();
+                }  
+            } else {
 
-                // present the form fields to create a new Contact
-                createNewContact(contactName);
-                }
+                    // remove any displayed contact/person info
+                    $("#contactInfo").empty();
+
+                    // present the form fields to create a new Contact
+                    createNewContact(contactName);
             }
         };
+        
+
 
         // populate the Contact (people) dropdown list with all the names in the Contacts list
         function addContactsToDropdown() {
@@ -218,56 +242,51 @@
 
             var contactNames = contactList;
 
-            // autocomplete in the Name field
+            // setup autocomplete in the Name field
             // uses jQueryUI to set the values:  http://api.jqueryui.com/autocomplete/
             // populates the Contact/Person dropdown list with full names of each record in the Contacts table
             $(".autocomplete").autocomplete({
                 delay: 500,
                 source: contactNames,
+                autoFocus: true,
                 select: function (e, ui) {
-                    // when a value is selected from the dropdown list, a ui object is returned with the selected value
-                    // i.e.  when the name changes in the Contact/Person list, use it to update the Topics  list
+
+                    // arrive here only when a value is selected from the autocomplete dropdown list
+                    // use that name to update the Topics accordion
+                    console.log("Autocomplete");
+
                     addTopics(ui.item.value);
+                    showContactInfo(contactIDs[ui.item.value]);
+                    $(this).val('');  // clear out the search field, so users can't hit Enter on an autocompleted value
+                    return false;
                 }
             });
         };
 
-        // submitting a search
-        // handle pressing the Enter key inside the search field
 
         $("#nameSearchField").on("keypress", function (e) {
+
+            // Problem:
+            // User can arrive here by hitting Enter on the name after selecting it from the dropdown.
+            // Solution:
+            // Clear the dropdown list after user selects a valid contact
+
+
+            // arrive here only when user enters a name in the name search field that isn't in the autocomplete list
+            // this means the Contact entered in the search field is not an existing Contact in the database
+            // this should kickoff the process of creating a new Contact/Person using input forms
+
             if (e.keyCode === 13) {
-                e.preventDefault();  // prevent the default Enter Key response, or it will also set off the buttons
-                addTopics($("#nameSearchField").val());
+                e.preventDefault();  // prevent the default Enter Key response, or it will also set off other buttons
+
+                console.log("Enter Key");
+                createNewContact($("#nameSearchField").val());
             };
         });
 
-            
-        function updateTopicThread() {
 
-            // clear out thte conversation history
-            $("#messageStream").empty();
-
-            // get the selected topic
-            topicDesc =  $("#subjectPicker").val();
-
-            // get the uuid of the Subject/Topic
-            var topicID = topicIDs[topicDesc].subjectId;
-
-            // fly the map to the location of this Topic/Subject
-            var latlon = topicIDs[topicDesc].latlon;
-            zoomToLatLon(latlon);
-
-            // display the topic back-and-forth comment thread
-            showTopicThread(topicID);
-        };
-
-        // listen for change of Topic in the Topic/Subject dropdown list
-        $("#subjectPicker").change(updateTopicThread);
-
-        // initialize the dropdown lists
+        // initialize the autocomplete dropdown contact list
         addContactsToDropdown();
-        addTopics();
 
     });
 </script>
