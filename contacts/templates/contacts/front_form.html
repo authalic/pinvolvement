@@ -21,6 +21,8 @@
             <!-- Display the selected Contact information here -->
             <div id="contactInfo"></div>
         
+
+
             <!-- end FORM here, or any link you click in the Accordion List will send a POST request -->
         </form>
 
@@ -29,7 +31,7 @@
                 <div id="topicAccordion">
                 </div>
             </div>
-            
+
     </div>
 </div>
 
@@ -172,7 +174,7 @@
 
                                 // generate the HTML for each subject's accordion drawer
                                 accordionDrawer = `
-                                    <div class="card">
+                                    <div class="card accordionCard">
                                         <div class="card-header" id="heading_{{ forloop.counter }}">
                                             <h5 class="mb-0">
                                                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_{{ forloop.counter }}">
@@ -211,12 +213,15 @@
         
         
         function addAccordionDrawers(topics) {
+
+            $("#topicAccordion").append("<h5>Contact History</h5>");
             for (topic in topics) {
 
                 $("#topicAccordion").append(topics[topic][1]);
 
             }
         };
+
 
 
         // populate the Contact (people) dropdown list with all the names in the Contacts list

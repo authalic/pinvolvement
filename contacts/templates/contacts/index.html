@@ -36,7 +36,7 @@
                     <a class="nav-link active" id="topics-tab" data-toggle="tab" href="#topics" role="tab">People</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="test-tab" data-toggle="tab" href="#test">Test</a>
+                    <a class="nav-link" id="test-tab" data-toggle="tab" href="#test">FormTest</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contactList">Contacts</a>
@@ -56,17 +56,78 @@
                 </div>
 
                 <!-- Tab 2-->
-                <div class="tab-pane fade" id="test" role="tabpanel">
-                    <!-- jQueryUI Datepicker Test -->
+            
+            <div class="tab-pane fade" id="test" role="tabpanel">
 
-                    <p> Date: <input type="text" id="datepicker"></p>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Contact Form</h5>
 
-                    <script>
-                        $( function() {
-                            $( "#datepicker" ).datepicker();
-                        })
-                    </script>
+                        <form class="form" id="commentform" method="POST">
+
+                            {% csrf_token %}
+
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="first_name" placeholder="First Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Last Name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email address</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inputPhone">Phone</label>
+                                <input type="text" class="form-control" id="phone" name="phone" placeholder="xxx-xxx-xxxx">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="datepicker">Date</label>
+                                <input type="text" class="form-control" id="datepicker" name="date">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inputForm">Comment</label>
+                                <textarea class="form-control" id="inputForm" placeholder="Enter your comment here" style="height: 240px;"></textarea>
+                            </div>
+
+                            <!-- hidden field for storing the coordinates of the placed point marker -->
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" id="pointCoords" name="coordinates">
+                            </div>
+
+                            <button id="submitBtn" class="btn btn-primary" type="submit">Submit</button>
+
+                            <!-- Drop a Point (relocate this to another tab?) -->
+                            <div class="form-group">
+
+                                <button id="enableDraw" class="btn btn-primary" data-toggle="button">Place Point Marker</button>
+                                <button id="submitBtn" class="btn btn-primary" type="submit">Submit</button>
+                                <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                
+                                <p style="font-size: 80%;" id="drawMssg">Click the map to place a point</p>
+                           </div>
+                        </form>        
+                    </div>
                 </div>
+
+
+
+                <!-- jQueryUI Datepicker -->
+
+                <script>
+                    $( function() {
+                        $( "#datepicker" ).datepicker();
+                    })
+                </script>
+
+
+            </div>
 
                 <!-- Tab 3 -->
                 <div class="tab-pane fade" id="contactList" role="tabpanel">
@@ -74,7 +135,7 @@
 
                         {% for contact in contacts %}
 
-                            <div class="card">
+                            <div class="card contactCard">
                                 <div class="card-header" id="heading_{{ forloop.counter }}">
                                     <h5 class="mb-0">
                                         <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_{{ forloop.counter }}" >
@@ -116,6 +177,9 @@
     
     <script>
         // can this be included as a script src?  Do the context variables still work in an imported script?
+
+     
+        
 
         // configure Leaflet map
         var mymap = L.map('mapid', {
