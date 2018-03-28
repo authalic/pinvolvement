@@ -1,0 +1,25 @@
+            <!-- input fields. Hidden until the "Place Point Marker" button is activated -->
+            <!-- TASK:  Make sure this is turned off as early as possible. IT seems to do a brief flash appearance on reloads -->
+            <div class="container" id="inputPersonForm">
+                <div class="row">
+                    <div class="col">
+                        <label for="addFirstName" class="sr-only">First Name</label>
+                        <input type="text" class="form-control" id="addFirstName" placeholder="First Name" />
+                    </div>
+                    <div class="col">
+                        <label for="addLastName" class="sr-only">Last Name</label>
+                        <input type="text" class="form-control" id="addLastName" placeholder="Last Name" />
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Drop a Point (relocate this to another tab?) -->
+            <div class="form-group">
+
+                <button id="enableDraw" class="btn btn-primary" data-toggle="button">Place Point Marker</button>
+                <button id="submitBtn" class="btn btn-primary" type="submit">Submit</button>
+                <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+
+                <p style="font-size: 80%;" id="drawMssg">Click the map to place a point</p>
+            </div>

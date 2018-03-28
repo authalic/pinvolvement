@@ -21,34 +21,17 @@
             <!-- Display the selected Contact information here -->
             <div id="contactInfo"></div>
 
-           <!-- Accordion List:  Here goes -->
-           <div id="topicAccordion"></div>
+           
 
-
-            <!-- input fields. Hidden until the "Place Point Marker" button is activated -->
-            <div class="container" id="inputPersonForm">
-                <div class="row">
-                    <div class="col">
-                        <label for="addFirstName" class="sr-only">First Name</label>
-                        <input type="text" class="form-control" id="addFirstName" placeholder="First Name" />
-                    </div>
-                    <div class="col">
-                        <label for="addLastName" class="sr-only">Last Name</label>
-                        <input type="text" class="form-control" id="addLastName" placeholder="Last Name" />
-                    </div>
+            <!-- Accordion List:  HTML for the accordion drawers gets injected into the #topicAccordion div -->
+            <div class="tab-pane fade" id="topicList" role="tabpanel">
+                <div id="topicAccordion">
                 </div>
             </div>
 
 
-            <!-- Drop a Point (relocate this to another tab?) -->
-            <div class="form-group">
 
-                <button id="enableDraw" class="btn btn-primary" data-toggle="button">Place Point Marker</button>
-                <button id="submitBtn" class="btn btn-primary" type="submit">Submit</button>
-                <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
 
-                <p style="font-size: 80%;" id="drawMssg">Click the map to place a point</p>
-            </div>
         </form>
     </div>
 </div>
@@ -89,7 +72,6 @@
                 }
             {% endfor %}
 
-            console.log("Huh?");
             $("#nameSearchField").blur();
         };
 
@@ -138,10 +120,12 @@
                                                     <p class="card-text text-right">`  + comm + `</p>
                                                 </div>
                                             </div>
-                                        </div> +
+                                        </div>
                                     </div>`;
                             {% endif %}
                         {% endfor %}
+
+                        accordionThread += '\n</div>'
                         
                         return accordionThread;
 
@@ -156,7 +140,6 @@
         function addTopics(contactName) {
 
             // QUESTION:  Is it possible to get here if the user enters anything but an existing Person?
-
 
             // input is the name of a person, in the format returned from Contact.__str__(self) in the model
 
@@ -181,8 +164,9 @@
                     // get the uuid of the Person/Contact submitted as the argument
                     var contactID = contactIDs[contactName];
 
-                    // add/filter this contact's topics to an object:  {'subject': 'html_for_accordion_slider'}
-                    topics = {};
+                    // add this contact's topics to an array for creating the individual drawers in the accordion 
+                    // Each topic is itself an array ['subject', 'html_for_accordion_slider']
+                    topics = [];
 
 
                     // loop through Subjects/Topics, check if their Contact.id matches the current Contact's id
@@ -192,6 +176,8 @@
 
                                 // get the HTML for the back-and-forth comments
                                 commentThread = showTopicThread("{{ subject.id }}");
+
+                                console.log(commentThread);
 
                                 // generate the HTML for each subject's accordion drawer
                                 accordionDrawer = `
@@ -210,7 +196,8 @@
                                         </div>
                                     </div>`
 
-                                topics[ "{{ subject }}" ] = accordionDrawer;
+                                topics.push([ "{{ subject }}" , accordionDrawer]);
+
                             }
                         {% endfor %}
 
@@ -218,6 +205,7 @@
                         return topics;
 
                 } else {
+                        alert("huh?");
                         $("#topicAccordion").hide();
                 }  
             } else {
@@ -230,6 +218,16 @@
             }
         };
         
+        
+        function addAccordionDrawers(topics) {
+            for (topic in topics) {
+
+                console.log(topics[topic]);
+
+                $("#topicAccordion").append(topics[topic][1]);
+
+            }
+        };
 
 
         // populate the Contact (people) dropdown list with all the names in the Contacts list
@@ -253,9 +251,14 @@
 
                     // arrive here only when a value is selected from the autocomplete dropdown list
                     // use that name to update the Topics accordion
-                    console.log("Autocomplete");
 
-                    addTopics(ui.item.value);
+                    var topicCards = addTopics(ui.item.value);
+                    if (topicCards.length > 0) {
+
+                        $("#topicAccordion").show();
+                        // send the array of topics to a function that populates the accordion list
+                        addAccordionDrawers(topicCards);
+                    }
                     showContactInfo(contactIDs[ui.item.value]);
                     $(this).val('');  // clear out the search field, so users can't hit Enter on an autocompleted value
                     return false;
