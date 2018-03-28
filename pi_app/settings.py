@@ -153,5 +153,3 @@ LEAFLET_CONFIG = {
     'DEFAULT_ZOOM': 11,
     'MIN_ZOOM': 4,
 }
-
-CRISPY_TEMPLATE_PACK = 'bootstrap4'

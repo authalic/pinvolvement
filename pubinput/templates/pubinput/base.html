@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+{% block loadleaflet %}{% endblock %}
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- jQueryUI CSS -->
+    <link rel="stylesheet" href={% static '/contacts/jquery-ui/jquery-ui.css' %}>
+    <link rel="stylesheet" href={% static '/contacts/jquery-ui/jquery-ui.theme.css' %}>
+    <link rel="stylesheet" href={% static '/contacts/jquery-ui/jquery-ui.structure.css' %}>
+    
+    
+    <!-- jQuery JS  3.2.1 full version: load before Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    
+    <!-- jQueryUI JS -->
+    <script src={% static 'contacts/jquery-ui/jquery-ui.min.js' %}></script>
+    
+    <!-- Popper:  required with jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    
+    <!-- Bootstrap 4.0 JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+    {% block title %}
+    <title>Document</title>
+    {% endblock %}
+
+    <!-- load the project-specific CSS from the static files -->    
+    <link rel='stylesheet' href='{% static "contacts/css/styles.css" %}'>
+
+</head>
+
+<body>
+
+    <!-- navbar Responsive collapse on small screens  -->
+
+    <nav class="navbar sticky-top navbar-expand-md navbar-light bg-light">
+        <a class="navbar-brand" href="{% url 'index' %}">Project App</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarToggler">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contacts' %}">Persons</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'organizations' %}">Organizations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'subjects' %}">Topics</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'comments' %}">Comments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Outreach Log</a>
+                </li>
+                {% if user.is_superuser %}
+                <li>
+                    <a class="nav-link" href="{% url 'admin:index'%}">Admin</a>
+                </li>
+                {% endif %}
+            </ul>
+            <ul class="nav justify-content-end">
+                {% if user.is_authenticated %}
+                <li class="navbar-text">User: {{ user.username }}</li>
+
+                <li>
+                    <a class="nav-link" href="{% url 'logout'%}?next={{request.path}}">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login'%}?next={{request.path}}">Login</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+
+        <div class="jumbotron">
+
+            {% block content %}{% endblock %}
+
+        </div>
+
+        <!-- footer -->
+        {% block pagination %} {% if is_paginated %}
+        <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="page-current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
+        {% endif %} {% endblock %}
+
+    </div>
+
+    </script>
+
+
+</body>
+
+</html>
