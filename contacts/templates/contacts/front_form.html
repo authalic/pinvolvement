@@ -20,19 +20,16 @@
 
             <!-- Display the selected Contact information here -->
             <div id="contactInfo"></div>
-
-           
+        
+            <!-- end FORM here, or any link you click in the Accordion List will send a POST request -->
+        </form>
 
             <!-- Accordion List:  HTML for the accordion drawers gets injected into the #topicAccordion div -->
-            <div class="tab-pane fade" id="topicList" role="tabpanel">
+            <div class="tab-pane" id="topicList" role="tabpanel">
                 <div id="topicAccordion">
                 </div>
             </div>
-
-
-
-
-        </form>
+            
     </div>
 </div>
 
@@ -87,8 +84,6 @@
 
                         var accordionThread = "";
 
-                        accordionThread += '<div class="container">';
-
                         {% for comment in subject.get_comments %}
                             {% if comment.is_incoming %}
 
@@ -125,8 +120,6 @@
                             {% endif %}
                         {% endfor %}
 
-                        accordionThread += '\n</div>'
-                        
                         return accordionThread;
 
                     {% else %}
@@ -177,8 +170,6 @@
                                 // get the HTML for the back-and-forth comments
                                 commentThread = showTopicThread("{{ subject.id }}");
 
-                                console.log(commentThread);
-
                                 // generate the HTML for each subject's accordion drawer
                                 accordionDrawer = `
                                     <div class="card">
@@ -221,8 +212,6 @@
         
         function addAccordionDrawers(topics) {
             for (topic in topics) {
-
-                console.log(topics[topic]);
 
                 $("#topicAccordion").append(topics[topic][1]);
 
