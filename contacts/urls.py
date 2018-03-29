@@ -3,7 +3,7 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.workflow, name='workflow'),
+    path('', views.workflow, name='index'),
 
     path('contacts/', views.ContactListView.as_view(), name='contacts'),
     path('contact/<uuid:pk>', views.ContactDetailView.as_view(), name='contact-detail'),
