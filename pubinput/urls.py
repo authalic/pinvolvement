@@ -13,4 +13,5 @@ urlpatterns = [
    path('adminview', views.CommentListAdminView.as_view(), name='admincommentview'),
 ]
 
+# DRF: Returns a URL pattern list which includes format suffix patterns appended to each of the URL patterns provided.
 urlpatterns = format_suffix_patterns(urlpatterns)
