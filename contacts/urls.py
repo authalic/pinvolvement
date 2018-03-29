@@ -3,7 +3,7 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.workflow, name='workflow'),
 
     path('contacts/', views.ContactListView.as_view(), name='contacts'),
     path('contact/<uuid:pk>', views.ContactDetailView.as_view(), name='contact-detail'),
@@ -35,9 +35,5 @@ urlpatterns = [
 
     # use the generic view to delete
     path('subject/<uuid:pk>/delete', views.SubjectDelete.as_view(), name='subject_delete'),
-
-
-    # for testing the workflow form
-    path('workflow/', views.workflow, name='workflow'),
 
 ]

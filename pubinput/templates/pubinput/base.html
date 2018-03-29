@@ -22,9 +22,6 @@
     <!-- jQuery JS  3.2.1 full version: load before Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     
-    <!-- jQueryUI JS -->
-    <script src={% static 'contacts/jquery-ui/jquery-ui.min.js' %}></script>
-    
     <!-- Popper:  required with jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     
@@ -37,7 +34,7 @@
     {% endblock %}
 
     <!-- load the project-specific CSS from the static files -->    
-    <link rel='stylesheet' href='{% static "contacts/css/styles.css" %}'>
+    <link rel='stylesheet' href='{% static "pubinput/css/styles.css" %}'>
 
 </head>
 
@@ -54,39 +51,10 @@
 
         <div class="collapse navbar-collapse" id="navbarToggler">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'contacts' %}">Persons</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'organizations' %}">Organizations</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'subjects' %}">Topics</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'comments' %}">Comments</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Outreach Log</a>
-                </li>
-                {% if user.is_superuser %}
-                <li>
-                    <a class="nav-link" href="{% url 'admin:index'%}">Admin</a>
-                </li>
-                {% endif %}
+
             </ul>
             <ul class="nav justify-content-end">
-                {% if user.is_authenticated %}
-                <li class="navbar-text">User: {{ user.username }}</li>
 
-                <li>
-                    <a class="nav-link" href="{% url 'logout'%}?next={{request.path}}">Logout</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login'%}?next={{request.path}}">Login</a>
-                </li>
-                {% endif %}
             </ul>
         </div>
     </nav>
@@ -119,7 +87,6 @@
     </div>
 
     </script>
-
 
 </body>
 

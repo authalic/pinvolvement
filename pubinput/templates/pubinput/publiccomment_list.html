@@ -1,0 +1,35 @@
+{% extends "pubinput/base.html" %}
+
+{% block title %}<title>Comments List</title>{% endblock %}
+
+
+{% block content %}
+    <div class="alert alert-light" role="alert">
+        <h3>Comment List</h3>
+    </div>
+    
+    {% if object_list %}
+
+            {% for object in object_list %}
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4>{{ object.first_name }} {{ object.last_name }}</h4>
+                        {{ object.address1 }} {{ object.address2 }}<br>
+                        {{ object.city }}, {{ object.state }} {{ object.zipcode }}
+                    </div>
+                    <div class="card-body">
+                        {{ object.comment|linebreaks }}
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        </table>
+
+    {% else %}
+        <p>No comments in database</p>
+    {% endif %}
+
+
+{% endblock %}

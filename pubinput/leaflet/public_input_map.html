@@ -15,12 +15,36 @@
     <!-- Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
 
-    <title>Public Comment Map</title>
+    <title>Public Comment Form</title>
 
     <style>
+        
         #mapid {
             height: 800px;
         }
+
+        .jumbotron {
+            padding: 20px;
+        }
+
+        textarea {
+            white-space: nowrap;
+        }
+
+        .leaflet-popup-content {
+            white-space: pre;
+            line-height: 0.8;
+        }
+
+        .leaflet-popup-content p {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        #popupDate {
+            color: #888;
+        }
+
     </style>
 </head>
 
@@ -33,12 +57,12 @@
         <div class="jumbotron">
 
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-lg-4">
                     <!-- sidebar content in left side -->
 
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Comment Form</h5>
+                            <h5 class="card-title">Public Comment Form</h5>
 
                             <form class="form" id="commentform">
                                 <div class="form-row">
@@ -105,11 +129,13 @@
 
                                 <!-- buttons -->
                                 <p>If you would like to associate your comment with a location on the map, click the button below, then click your site. </p>
-
-                                <button id="enableDraw" class="btn btn-primary" data-toggle="button">Add a Location to Map</button>
-
-                                <button id="submitBtn" class="btn btn-primary" type="submit">Submit Comment</button>
-
+                                <div class="form-group">
+                                    <button id="enableDraw" class="btn btn-primary" data-toggle="button">Add a Location to Map</button>
+                                </div>
+                                <div class="form-group">                                
+                                    <button id="submitBtn" class="btn btn-primary" type="submit">Submit Comment</button>
+                                </div>
+    
                                 <!-- display success or failure message here -->
                                 <div id="successMessage"></div>
 
@@ -117,14 +143,23 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-lg-8">
                     <!-- map window -->
 
                     <div id="mapid"></div>
 
                     <script>
                         $(function initializeMap() {
-                            var mymap = L.map('mapid').setView([40.70, -111.9], 12);
+                            var mymap = L.map('mapid', {
+                                center: [ 40.761831,-111.838815 ],
+                                zoom: 15,
+                                minZoom: 14,
+                                maxBounds: [
+                                    [ 40.781440, -111.871134 ],
+                                    [ 40.741554, -111.797160 ]
+                                ],
+                                maxBoundsViscosity: 0.5,
+                            });
 
                             // when user clicks the Place Point Marker button, change cursor to crosshairs, enable the point place event
                             $("#enableDraw").click(function () {
@@ -137,7 +172,7 @@
                                 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
                                     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
                                     maxZoom: 22,
-                                    id: 'mapbox.streets',
+                                    id: 'mapbox.satellite',
                                     accessToken: 'pk.eyJ1IjoiYXV0aGFsaWMiLCJhIjoiSHppSDJlWSJ9.h8QdzKDNKE1p_XDuzIBoSg'
                                 }).addTo(mymap);
 
@@ -154,15 +189,8 @@
                             };
 
                             function formatDate(dateObject) {
-                                // Reformat the dates.  This is a temporary klunky version
-
-                                hours = dateObject.getHours();
-                                minutes = dateObject.getMinutes();
-                                month = dateObject.getMonth() + 1;
-                                day = dateObject.getDate();
-                                year = dateObject.getFullYear();
-
-                                return "<b>"  + month + "-" + day + "-" + year + "  " + hours + ":" + minutes + "</b>"
+                                // Reformat the date
+                                return "<div id='popupDate'>" + dateObject.toLocaleTimeString() + "  " + dateObject.toLocaleDateString() + "</div>";
                             }
 
                             function getMapPoints() {
@@ -170,7 +198,6 @@
                                 $.getJSON('http://authalic.pythonanywhere.com/pubinput/viewcomments/', function (json) {
                                 // $.getJSON('http://localhost:8000/pubinput/viewcomments', function (json) {      # This works
                                     
-
                                     // there is probably a more elegant way to do this...
 
                                     for (x in json) {
@@ -184,7 +211,6 @@
                                             properties["submitted"] = new Date(json[x].submitted);
                                             properties["comment"] = json[x].comment;
 
-
                                             // split out the lat/lon from the Coordinates string
                                             var re = /\(([^)]+)\)/; // get everything between the parentheses
                                             lon = parseFloat(re.exec(json[x].location)[1].split(" ")[0]); // split the string at the space, return the 1st part
@@ -197,18 +223,17 @@
                                             var myStyle = {
                                                 "color": "#ff7800",
                                                 "weight": 5,
-                                                "opacity": 0.65
+                                                "opacity": 0.9,
                                             };
 
                                             L.geoJSON(feature, {
                                                 pointToLayer: function (feature, latlng) {
                                                     newMarker = L.circleMarker(latlng, geojsonMarkerOptions);
                                                     newMarker.bindPopup(
-                                                        "<h5>" + feature.properties.comment + "</h5><br>" + formatDate(feature.properties.submitted)
+                                                        "<p>" + feature.properties.comment + "</p><br>" + formatDate(feature.properties.submitted)
                                                         );
                                                     return newMarker;
                                                 },
-
                                             }).addTo(mymap);
                                         }
                                     }
@@ -254,7 +279,6 @@
                                 else {
                                     return null;
                                 }
-
                             };
 
 
@@ -274,26 +298,28 @@
                                 $.ajax({
                                     method: "POST",
                                     url: "http://authalic.pythonanywhere.com/pubinput/addcomment/",
-                                    // url: "http://localhost:8000/pubinput/addcomment",  this works
+                                    // url: "http://localhost:8000/pubinput/addcomment",
                                     data: $("#commentform").serialize(),
                                     success: function (e) {
                                         $("#commentform")[0].reset();
+                                        $('#successMessage').html("<b>Successfully added to database</b>");
                                     },
                                     error: function (e) {
-                                        alert("Failed" + msg);
+                                        alert("Failed");
                                         return false;
                                     }
                                 });
-                                $('#successMessage').html("<b>Successfully added to database</b>");
 
-                                // remove the marker symbol placed by User, if one was placed
-                                if (commentMarker) {
-                                    mymap.removeLayer(commentMarker);
-                                }
+                                setTimeout( function(){
+                                    // remove the marker symbol placed by User, if one was placed
+                                    if (commentMarker) {
+                                        mymap.removeLayer(commentMarker);
+                                    }
 
-                                // refresh the map here, by removing it and rebuilding it.
-                                mymap.remove();
-                                initializeMap();
+                                    // refresh the map here, by removing it and rebuilding it.
+                                    mymap.remove();
+                                    initializeMap();
+                                }, 2000 );  // delay to reload map. // can this be done asymmetrically?
                             });
                         });
                     </script>

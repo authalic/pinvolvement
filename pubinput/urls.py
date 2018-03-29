@@ -10,6 +10,7 @@ urlpatterns = [
    path('comments/<uuid:pk>', views.CommentView.as_view(), name='commentdetail'),
    path('addcomment', views.CommentCreateOnly.as_view(), name='commentcreateonly'),
    path('viewcomments', views.CommentListOnly.as_view(), name='commentviewonly'),
+   path('adminview', views.CommentListAdminView.as_view(), name='admincommentview'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

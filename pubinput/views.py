@@ -1,4 +1,5 @@
 from pubinput.models import PublicComment
+from django.views import generic
 from pubinput.serializers import CommentSerializer, ViewSerializer
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import generics
@@ -38,3 +39,8 @@ class CommentCreateOnly(generics.CreateAPIView):
     '''
     queryset = PublicComment.objects.all()  
     serializer_class = CommentSerializer  # change this serializer
+
+
+class CommentListAdminView(LoginRequiredMixin, generic.ListView):
+    model = PublicComment
+    paginate_by = 20
