@@ -34,7 +34,21 @@
     {% endblock %}
 
     <!-- load the project-specific CSS from the static files -->    
-    <link rel='stylesheet' href='{% static "pubinput/css/styles.css" %}'>
+    <style>
+
+        .dateTime {
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .contactInfo {
+            width: 100%;
+        }
+        .location {
+            font-size: 0.7rem;
+            font-style: italic;
+            color: darkgray;
+        }
+    </style>
 
 </head>
 
@@ -77,12 +91,9 @@
                 {% endif %}
             </span>
         </div>
-        {% endif %} {% endblock %}
-
+        {% endif %} 
+        {% endblock %}
     </div>
-
     </script>
-
 </body>
-
 </html>

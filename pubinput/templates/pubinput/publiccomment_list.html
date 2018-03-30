@@ -14,12 +14,29 @@
 
                 <div class="card">
                     <div class="card-header">
+
                         <h4>{{ object.first_name }} {{ object.last_name }}</h4>
-                        {{ object.address1 }} {{ object.address2 }}<br>
-                        {{ object.city }}, {{ object.state }} {{ object.zipcode }}
+                        
+                        <div class="container-fluid contactInfo">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ object.address1 }} {{ object.address2 }}<br>
+                                    {{ object.city }}, {{ object.state }} {{ object.zipcode }}
+                                </div>
+                                <div class="col-md-6 text-md-right">
+                                    {{ object.email }}<br>
+                                    {{ object.phone }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="card-body">
+                        <div class="dateTime">{{ object.submitted }}</div>
                         {{ object.comment|linebreaks }}
+                        {% if not object.location %}
+                            <div class="location">Not associated with location on map</div>
+                        {% endif %}
                     </div>
                 </div>
 
