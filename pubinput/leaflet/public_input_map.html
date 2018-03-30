@@ -301,14 +301,17 @@
                                     // url: "http://localhost:8000/pubinput/addcomment",
                                     data: $("#commentform").serialize(),
                                     success: function (e) {
-                                        $("#commentform")[0].reset();
-                                        $('#successMessage').html("<b>Successfully added to database</b>");
+                                        console.log("Successful post");
                                     },
                                     error: function (e) {
-                                        alert("Failed");
+                                        console.log("Post Failed");
                                         return false;
                                     }
                                 });
+
+                                // reset the form, or you'll get multiple copies
+                                $("#commentform")[0].reset();
+
 
                                 setTimeout( function(){
                                     // remove the marker symbol placed by User, if one was placed
