@@ -8,7 +8,7 @@ app_name = 'pubinput'
 urlpatterns = [
    path('comments/', views.CommentList.as_view(), name='commentlist'),
    path('comments/<uuid:pk>', views.CommentView.as_view(), name='commentdetail'),
-   path('addcomment', views.CommentCreateOnly.as_view(), name='commentcreateonly'),
+   path('addcomment', views.CommentCreateOnly.as_view(), name='commentcreateonly'),  #  WHY DOESN'T THIS WORK?????
    path('viewcomments', views.CommentListOnly.as_view(), name='commentviewonly'),
    path('adminview', views.CommentListAdminView.as_view(), name='admincommentview'),
 ]
