@@ -1,4 +1,5 @@
 {% extends "contacts/base.html" %}
+{% load static %}
 
 <!-- jQuery and Bootstrap are loaded in the base.html template, before any Leaflet stuff -->
 
@@ -18,9 +19,18 @@
 
 <!-- Esri Leaflet Geocoder -->
 <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.9/dist/esri-leaflet-geocoder.css">
-<script src="https://unpkg.com/esri-leaflet-geocoder@2.2.8"></script> {% endblock %} {% block title %}
+<script src="https://unpkg.com/esri-leaflet-geocoder@2.2.8"></script> 
+
+{% endblock %}
+
+{% block title %}
+
 <title>PI SPA</title>
-{% endblock %} {% block content %}
+
+{% endblock %}
+
+
+{% block content %}
 
 <div class="row">
 
@@ -44,15 +54,41 @@
                     <!--Included template is rendered within the context of its including template 
                             to include additional context, add 'with' to the 'include' statement -->
 
-                    {% include 'contacts/front_form.html' %}
-
+                    <div class="card">
+                        <div class="card-body">
+                    
+                            <h5 class="card-title" id="searchFormTitle">Individual Search Form</h5>
+                    
+                                <!-- search for existing Person or click button to create a New Person -->
+                    
+                                <div class="input-group">
+                                    <input type="text" class="form-control autocomplete" id="nameSearchField" placeholder="Search Person" />
+                                    <div class="input-group-append">
+                                    <!-- Button trigger for Modal -->
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPersonModal">
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                    
+                                <!-- Display the selected Contact information here -->
+                                <div id="contactInfo"></div>
+                    
+                            <!-- Accordion List:  HTML for the accordion drawers gets injected into the #topicAccordion div -->
+                            <div class="tab-pane" id="topicList" role="tabpanel">
+                                <div id="topicAccordion">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                
                     <!--Modal form.  Add new Person -->
 
-                    <div class="modal fade" id="newPersonModal" tabindex="-1" role="dialog">
+                    <div class="modal hide fade" id="newPersonModal" tabindex="-1" data-focus-on="input:first">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="personModalLongTitle">Create New Person Form</h5>
+                                    <h5 class="modal-title" id="personModalLongTitle">Create New Person Record</h5>
 
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -79,6 +115,30 @@
                                                 <input type="text" class="form-control" id="desc" name="textnote">
                                             </div>
                                         </div>
+
+                                        <div class="form-row">
+                                            <div class="col">
+                                                <label for="id_contact-organization">Organization</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#newOrgModal">+</button>
+                                                    </div>
+                                                    <select class="form-control input-group" name="organization">
+                                                        <option value="">---</option>
+    
+                                                        {% for org in organizations %}
+                                                            <option value="{{ org.org_name }}">{{ org.org_name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <label for="orgTitle">Title</label>
+                                                <input type="text" class="form-control" id="orgTitle" name="org_title">
+                                            </div>
+                                        </div>
+
                                         <div class="form-row">
                                             <div class="col">
                                                 <label for="email">Email Address</label>
@@ -120,6 +180,66 @@
                                 <div class="modal-footer">
                                     <!-- button -->
                                     <button id="contactSubmitBtn" class="btn btn-primary" type="submit">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal form. add new Organization -->
+                    <div class="modal hide fade" id="newOrgModal" tabindex="-1" data-focus-on="input:first">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="personModalLongTitle">Create New Organization Record</h5>
+
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="form" id="orgCreateForm">
+                                        {% csrf_token %}
+                                        <div class="form-row">
+                                            <div class="col">
+                                                <label for="orgName">Organization Name</label>
+                                                <input type="text" class="form-control" id="orgName" name="org_name">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col">
+                                                <label for="addr1">Address 1</label>
+                                                <input type="text" class="form-control" id="addr1" name="org_address1">
+                                            </div>
+                                            <div class="col">
+                                                <label for="addr2">Address 2</label>
+                                                <input type="text" class="form-control" id="addr2" name="org_address2">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col">
+                                                <label for="orgCity">City</label>
+                                                <input type="text" class="form-control" id="orgCity" name="org_city">
+                                            </div>
+                                            <div class="col">
+                                                <label for="orgState">State</label>
+                                                <input type="text" class="form-control" id="orgState" name="org_state">
+                                            </div>
+                                            <div class="col">
+                                                <label for="orgState">Zip</label>
+                                                <input type="text" class="form-control" id="orgZip" name="org_zipcode">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col">
+                                                <label for="orgCity">Phone</label>
+                                                <input type="text" class="form-control" id="orgPhone" name="org_phone">
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                        <!-- button -->
+                                        <button id="contactSubmitBtn" class="btn btn-primary" type="submit">Submit</button>
                                     </form>
                                 </div>
                             </div>
@@ -190,11 +310,19 @@
     </div>
     <!-- end of map window -->
 
-
-    <script>
-        // can this be included as a script src?  Do the context variables still work in an imported script?
+</div>
 
 
+<script>
+    // NOTE:  The DJango tempate tags and variables don't seem to work with this script is imported from src file
+
+    $(function () {
+
+        var contactList = []; // array of Contact names (first and last) as strings
+        var contactIDs = {};  // object of {name : uuid} pairs
+        var topicList = [];  // list of Topics associated with a Contact/Person 
+        var topicIDs = {}; // object of {topic : uuid} pairs
+    
         // configure Leaflet map
         var mymap = L.map('mapid', {
             center: [40.755, -111.88],
@@ -206,46 +334,8 @@
             ],
             maxBoundsViscosity: 0.5,
         });
-
-
-        // pan and zoom to the location of Subject/Topic
-        // latlon parameter is an array: [lat, lon]
-        function zoomToLatLon(latlon) {
-            mymap.flyTo(latlon, 16);
-        };
-
-        // hide the input fields and buttons until the user clicks the "Place Point Marker" button        
-        $("#drawMssg").hide();
-        $("#submitBtn").hide();
-        $("#cancelBtn").hide();
-        $("#addFirstName").hide();
-        $("#addLastName").hide();
-
-        // when user clicks the Place Point Marker button, turn on the form and enable the point place event
-        $("#enableDraw").click(function () {
-
-            mymap.on('click', onMapClick); // turn on the listening event and set handler for placing a point
-
-            // hide the contact info in the sidebar
-            $("#contactInfo").hide();
-
-            // replace with input form
-            $("#addFirstName").show();
-            $("#addLastName").show();
-
-            // change the available buttons on the form, while user is placing a point
-            $("#enableDraw").hide();
-            $("#submitBtn").show();
-            $("#cancelBtn").show();
-            $("#drawMssg").show();
-
-            // change the cursor appearance when hovering over the map in "place point" mode
-            $("#mapid").css('cursor', 'crosshair');
-        });
-
-        // ESRI basemap
-        // L.esri.basemapLayer("Topographic").addTo(mymap);
-
+    
+    
         // Mapbox basemap
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -253,7 +343,8 @@
             id: 'mapbox.satellite',
             accessToken: 'pk.eyJ1IjoiYXV0aGFsaWMiLCJhIjoiSHppSDJlWSJ9.h8QdzKDNKE1p_XDuzIBoSg',
         }).addTo(mymap);
-
+    
+    
         // ESRI search widget
         var searchControl = L.esri.Geocoding.geosearch().addTo(mymap);
         var results = L.layerGroup().addTo(mymap);
@@ -264,7 +355,8 @@
                 results.addLayer(L.marker(data.results[i].latlng));
             }
         });
-
+    
+        
         // circle marker styling
         var geojsonMarkerStyling = {
             radius: 10,
@@ -274,19 +366,19 @@
             opacity: 1,
             fillOpacity: 0.9
         };
-
+    
         // go to town with Django template tags and context variables
         {% for subject in subjects %}
-
+    
             // check if the Subject has a spatial location (some may be unattached to a point)
             {% if subject.coordinates %}
-
+    
                 // create a new circleMarker for each existing Issue/Subject
                 var marker = L.circleMarker([ {{ subject.lat }}, {{ subject.lon }} ], geojsonMarkerStyling );
-
+    
                 // Get each marker's individual details
                 subjectURL = "{% url 'subject-detail' subject.pk %}"
-
+    
                 // build the popup contents
                 marker.bindPopup("<h4>{{ subject.contact }}</h4>"
                     + "<a href='" + subjectURL + "'>Subject: {{ subject.summary }}</a><br><br>"
@@ -296,40 +388,40 @@
                 );
                 marker.bindTooltip("<b> {{ subject.contact }} </b><br> {{ subject.summary }} ")
                 marker.addTo(mymap);
-
+    
             {% endif %}
         {% endfor %}
-
+    
         // when the marker's popup opens, close any open tooltips
-
+    
         // store the current coordinates of the new user-placed marker
         var markerLocation;
-
+    
         // obtain the marker's initial position
         function onMapClick(e) {
             markerLocation = e.latlng;
-
+    
             commentMarker = new L.marker(e.latlng, {
                 draggable: true
             });
-
+    
             mymap.addLayer(commentMarker);           // graphic layer storing the dropped point.  Use this to remove the point later.
             mymap.off('click');                      // turn off the map's click listener
             commentMarker.on('move', onMarkerMove);  // listen for marker movements
         };
-
+    
         // update the marker's xy position when the marker is dragged
         function onMarkerMove(e) {
             markerLocation = e.latlng;
         };
-
-
+    
+    
         // handle the form submit using jQuery AJAX
         $("#contactCreateForm").submit(function (event) {
-
+    
             // stop form from submitting normally
             event.preventDefault();
-
+    
             $.ajax({
                 method: "POST",
                 // url: "http://authalic.pythonanywhere.com/pubinput/addcomment/",
@@ -338,7 +430,7 @@
                 success: function (e) {
                     console.log("Successful post");
                     $("#newPersonModal").modal('toggle');
-
+    
                     // reload the page to see the new contact in the autocomplete and Contact accordion list
                     location.reload();
                 },
@@ -348,8 +440,257 @@
                 }
             });
         });
-
-    </script>
-</div>
+    
+    
+        // create a new contact using the form inputs
+        function createNewContact(contactName) {
+            // this is where the form fields will be POSTed to the django View, and a new Contact object created
+    
+            console.log("create a new contact");
+        };
+    
+        // when a name is entered...
+        // show an Accordion list topics below it, if that person is in Contacts list, or
+        // display form to create new person, if not in Contacts lists
+    
+    
+        function showContactInfo(contactID) {
+            // populate the #contactInfo div, below the search bar, with Contact/Person's info
+            // loop through Contacts/People, check if their Contact.id matches the contactID argument
+    
+            {% for contact in contacts %}
+                if (contactID == '{{ contact.id }}') {
+                    $("#contactInfo").empty().append(
+                        "<table class='table'>" +
+                            "<tr><th colspan='2'><h4>{{ contact }}</h4></th><td>" +
+                            "<tr><th>Address</th><td>" + "{{ contact.address1 }} {{ contact.address2 }}" + "</td></tr>" +
+                            "<tr><th>Phone</th><td>" + "{{ contact.phone }}" + "</td></tr>" +
+                            "<tr><th>Email</th><td>" + "{{ contact.email }}" + "</td></tr>" +
+                        "</table>"
+                    );
+                }
+            {% endfor %}
+    
+            $("#nameSearchField").blur();
+        };
+    
+        
+        function showTopicThread(topicID) {
+            // get the specific Subject/Topic/Thread/Conversation, return the back-and-forth thread of comments
+            // add the subjects/topics associated with the selected person
+    
+            {% for subject in subjects %}
+                if (topicID == '{{ subject.id }}') {
+    
+                    {% if subject.get_comments %}
+    
+                        var accordionThread = "";
+    
+                        {% for comment in subject.get_comments %}
+                            {% if comment.is_incoming %}
+    
+                                var comm = "{{ comment.commentxt|safe }}";
+    
+                                accordionThread += `
+                                    <div class="row">
+                                        <div class="col-sm-10">
+                                            <div class="card border-dark">
+                                                <div class="card-header">{{ comment.contact }}</div>
+                                                <div class="card-body">
+                                                    <div class="card-title">{{ comment.timestamp }}</div>
+                                                    <p class="card-text">` + comm + `</p> 
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                            {% else %}
+                            
+                                var comm = "{{ comment.commentxt|safe }}";
+    
+                                accordionThread += `
+                                    <div class="row">
+                                        <div class="col-sm-10 offset-sm-2">
+                                            <div class="card border-primary">
+                                                <div class="card-header bg-info text-white text-right">{{ comment.employee.first_name }} {{ comment.employee.last_name }}</div>
+                                                <div class="card-body text-info">
+                                                    <div class="card-title text-right">{{ comment.timestamp }}</div>
+                                                    <p class="card-text text-right">`  + comm + `</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                            {% endif %}
+                        {% endfor %}
+    
+                        return accordionThread;
+    
+                    {% else %}
+                        return "No Comment History";
+                    {% endif %}
+                }
+            {% endfor %}   
+        };
+    
+    
+        function addTopics(contactName) {
+    
+            // QUESTION:  Is it possible to get here if the user enters anything but an existing Person?
+    
+            // input is the name of a person, in the format returned from Contact.__str__(self) in the model
+    
+            // build the array of all existing topic descriptions
+            // build the dictionary/object of all topic descriptions, uuids, and lat/lon point coordinates
+    
+            {% for subject in subjects %}
+                topicList.push("{{ subject.summary }}");
+                topicIDs['{{ subject }}'] = { "subjectId": '{{ subject.id }}', "latlon": [{{ subject.lat }}, {{ subject.lon }} ] };
+            {% endfor %}
+    
+    
+            // check if the contactName is an existing Contact.   ??? Is this necessary?
+            if (contactName != null) {
+                if (contactName in contactIDs) {
+    
+                    // clear any existing options of the Subject/Topic dropdown
+                    $("#topicAccordion").empty();
+    
+                    // add the selected contact's topics to the accordion
+    
+                    // get the uuid of the Person/Contact submitted as the argument
+                    var contactID = contactIDs[contactName];
+    
+                    // add this contact's topics to an array for creating the individual drawers in the accordion 
+                    // Each topic is itself an array ['subject', 'html_for_accordion_slider']
+                    topics = [];
+    
+    
+                    // loop through Subjects/Topics, check if their Contact.id matches the current Contact's id
+                    // add matching Topics to the topicList array
+                        {% for subject in subjects %}
+                            if (contactID == '{{ subject.contact.id }}') {
+    
+                                // get the HTML for the back-and-forth comments
+                                commentThread = showTopicThread("{{ subject.id }}");
+    
+                                // generate the HTML for each subject's accordion drawer
+                                accordionDrawer = `
+                                    <div class="card accordionCard topicCard">
+                                        <div class="card-header" id="heading_{{ forloop.counter }}">
+                                            <h5 class="mb-0">
+                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_{{ forloop.counter }}">
+                                                    {{ subject }}
+                                                </button>
+                                            </h5>
+                                        </div>
+                                        <div id="collapse_{{ forloop.counter }}" class="collapse" data-parent="#topicAccordion">
+                                            <div class="card-body">
+                                                ` + commentThread + `
+                                            </div>
+                                        </div>
+                                    </div>`
+    
+                                    drawerName = "#heading_{{ forloop.counter }}";
+    
+                                var counter = topics.push([ "{{ subject }}" , accordionDrawer]);
+    
+                                // bind an event handler to zoom the map to the location when an accordion drawer is clicked
+                                $(document).on('click', '#heading_{{ forloop.counter }}', function() {
+                                    mymap.flyTo([{{ subject.lat }}, {{ subject.lon }}], 18);
+                                });
+                                
+                            }
+                        {% endfor %}
+    
+                        // return the object containing all of the HTML for the individual accordion drawers
+                        return topics;
+    
+                } else {
+                        alert("huh?");
+                        $("#topicAccordion").hide();
+                }  
+            } else {
+    
+                    // remove any displayed contact/person info
+                    $("#contactInfo").empty();
+    
+                    // present the form fields to create a new Contact
+                    createNewContact(contactName);
+            }
+        };
+    
+    
+        function addAccordionDrawers(topics) {
+    
+            $("#topicAccordion").append("<h5>Contact History</h5>");
+            for (topic in topics) {
+    
+                $("#topicAccordion").append(topics[topic][1]);
+    
+            }
+        };
+    
+    
+        // populate the Contact (people) autocomplete dropdown list with all the names in the Contacts list
+        function addContactsToDropdown() {
+    
+            {% for contact in contacts %}
+                contactList.push('{{ contact }}');
+                contactIDs['{{ contact}}'] = '{{ contact.id }}';
+            {% endfor %}
+    
+            var contactNames = contactList;
+    
+            // setup autocomplete in the Name field
+            // uses jQueryUI to set the values:  http://api.jqueryui.com/autocomplete/
+            // populates the Contact/Person dropdown list with full names of each record in the Contacts table
+            $(".autocomplete").autocomplete({
+                delay: 500,
+                source: contactNames,
+                autoFocus: true,
+                select: function (e, ui) {
+    
+                    // arrive here only when a value is selected from the autocomplete dropdown list
+                    // use that name to update the Topics accordion
+    
+                    var topicCards = addTopics(ui.item.value);
+                    if (topicCards.length > 0) {
+    
+                        $("#topicAccordion").show();
+                        // send the array of topics to a function that populates the accordion list
+                        addAccordionDrawers(topicCards);
+                    }
+                    showContactInfo(contactIDs[ui.item.value]);
+                    $(this).val('');  // clear out the search field, so users can't hit Enter on an autocompleted value
+                    return false;
+                }
+            });
+        };
+    
+    
+        $("#nameSearchField").on("keypress", function (e) {
+    
+            // Problem:
+            // User can arrive here by hitting Enter on the name after selecting it from the dropdown.
+            // Solution:
+            // Clear the dropdown list after user selects a valid contact
+    
+    
+            // arrive here only when user enters a name in the name search field that isn't in the autocomplete list
+            // this means the Contact entered in the search field is not an existing Contact in the database
+            // this should kickoff the process of creating a new Contact/Person using input forms
+    
+            if (e.keyCode === 13) {
+                e.preventDefault();  // prevent the default Enter Key response, or it will also set off other buttons
+    
+                console.log("Enter Key");
+                createNewContact($("#nameSearchField").val());
+                $("#contactAccordion").reload();
+            };
+        });
+    
+        // initialize the autocomplete dropdown contact list
+        addContactsToDropdown();    
+    });
+</script>
 
 {% endblock %}

@@ -51,6 +51,7 @@ def workflow(request):
         'contact_form': contact_form,
         'contacts': Contact.objects.all(),
         'subjects': Subject.objects.all(),
+        'organizations': Organization.objects.all(),
         'subject_form': SubjectForm(prefix="subject"),
     }
 
