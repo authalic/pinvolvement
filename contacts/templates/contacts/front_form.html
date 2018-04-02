@@ -5,33 +5,26 @@
 
         <h5 class="card-title" id="searchFormTitle">Individual Search Form</h5>
 
-        <form class="form" id="commentform" action="" method="post">
+            <!-- search for existing Person or click button to create a New Person -->
 
-            {% csrf_token %}
-
-            <!-- {{ subject_form.summary }} -->
-
-            <div class="form-group">
-                <div class="input-group">
-                    <input type="text" class="form-control autocomplete" id="nameSearchField" placeholder="Search Person" />
+            <div class="input-group">
+                <input type="text" class="form-control autocomplete" id="nameSearchField" placeholder="Search Person" />
+                <div class="input-group-append">
+                <!-- Button trigger for Modal -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPersonModal">
+                        +
+                    </button>
                 </div>
             </div>
-
 
             <!-- Display the selected Contact information here -->
             <div id="contactInfo"></div>
-        
 
-
-            <!-- end FORM here, or any link you click in the Accordion List will send a POST request -->
-        </form>
-
-            <!-- Accordion List:  HTML for the accordion drawers gets injected into the #topicAccordion div -->
-            <div class="tab-pane" id="topicList" role="tabpanel">
-                <div id="topicAccordion">
-                </div>
+        <!-- Accordion List:  HTML for the accordion drawers gets injected into the #topicAccordion div -->
+        <div class="tab-pane" id="topicList" role="tabpanel">
+            <div id="topicAccordion">
             </div>
-
+        </div>
     </div>
 </div>
 

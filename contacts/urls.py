@@ -3,6 +3,7 @@ from . import views
 
 
 urlpatterns = [
+    # views.workflow is the main index page view of the application
     path('', views.workflow, name='index'),
 
     path('contacts/', views.ContactListView.as_view(), name='contacts'),

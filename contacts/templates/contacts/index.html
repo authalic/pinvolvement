@@ -24,6 +24,7 @@
     <title>PI SPA</title>
 {% endblock %}
 
+
 {% block content %}
 
 <div class="row">
@@ -36,9 +37,6 @@
                     <a class="nav-link active" id="topics-tab" data-toggle="tab" href="#topics" role="tab">People</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="test-tab" data-toggle="tab" href="#test">FormTest</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contactList">Contacts</a>
                 </li>
             </ul>
@@ -48,116 +46,84 @@
                 <!-- Tab 1 -->
                 <div class="tab-pane fade show active" id="topics" role="tabpanel">
                         
-                    {% include 'contacts/front_form.html' %}
-
                     <!--Included template is rendered within the context of its including template 
                             to include additional context, add 'with' to the 'include' statement -->
 
-                </div>
-
-                <!-- Tab 2-->
-            
-            <div class="tab-pane fade" id="test" role="tabpanel">
-
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Contact Form</h5>
-
-                        <form class="form" id="commentform" method="POST">
-
-                            {% csrf_token %}
-
-                            <div class="form-group">
-                                <label for="firstName">First Name</label>
-                                <input type="text" class="form-control" id="firstName" name="first_name" placeholder="First Name">
-                            </div>
-                            <div class="form-group">
-                                <label for="lastName">Last Name</label>
-                                <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Last Name">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Email address</label>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="inputPhone">Phone</label>
-                                <input type="text" class="form-control" id="phone" name="phone" placeholder="xxx-xxx-xxxx">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="datepicker">Date</label>
-                                <input type="text" class="form-control" id="datepicker" name="date">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="inputForm">Comment</label>
-                                <textarea class="form-control" id="inputForm" placeholder="Enter your comment here" style="height: 240px;"></textarea>
-                            </div>
-
-                            <!-- hidden field for storing the coordinates of the placed point marker -->
-                            <div class="form-group">
-                                <input type="hidden" class="form-control" id="pointCoords" name="coordinates">
-                            </div>
-
-                            <button id="submitBtn" class="btn btn-primary" type="submit">Submit</button>
-
-                            <!-- Drop a Point (relocate this to another tab?) -->
-                            <div class="form-group">
-
-                                <button id="enableDraw" class="btn btn-primary" data-toggle="button">Place Point Marker</button>
-                                <button id="submitBtn" class="btn btn-primary" type="submit">Submit</button>
-                                <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                    {% include 'contacts/front_form.html' %}
                 
-                                <p style="font-size: 80%;" id="drawMssg">Click the map to place a point</p>
-                           </div>
-                        </form>        
+                    <!--Modal form.  Add new Person -->
+
+                    <div class="modal fade" id="newPersonModal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="personModalLongTitle">Contact Form</h5>
+
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+
+                                </div>
+                                <div class="modal-body">
+                                    <form class="form" id="newContactForm" method="POST" form action="/contacts/contact/create">
+    
+                                        {% include 'contacts/contact_form.html' with form=comtact_form %}
+                                    </form>
+                                </div>
+                                <div class="modal-footer">                                     
+                                </div>
+                            </div>
+                        </div>                    
                     </div>
                 </div>
 
-
-
-                <!-- jQueryUI Datepicker -->
-
-                <script>
-                    $( function() {
-                        $( "#datepicker" ).datepicker();
-                    })
-                </script>
-
-
-            </div>
-
-                <!-- Tab 3 -->
+                <!-- Tab 2 -->
                 <div class="tab-pane fade" id="contactList" role="tabpanel">
                     <div id="contactAccordion">
-
+                
                         {% for contact in contacts %}
-
-                            <div class="card contactCard">
-                                <div class="card-header" id="heading_{{ forloop.counter }}">
-                                    <h5 class="mb-0">
-                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_{{ forloop.counter }}" >
-                                            {{ contact.first_name }} {{ contact.last_name }}
-                                        </button>
-                                    </h5>
-                                </div>
-                                <div id="collapse_{{ forloop.counter }}" class="collapse" aria-labelledby="headingOne" data-parent="#contactAccordion">
-                                    <div class="card-body">
-                                        <table class='table'>
-                                            <tr><td class="orgtitle"> {{ contact.org_title }} </td><td class="orgtitle"> {{ contact.organization }} </td></tr>
-                                            <tr><th>Address</th><td> {{ contact.address1 }} {{ contact.address2 }} </td></tr>
-                                            <tr><th></th><td> {{ contact.city }}, {{ contact.state }} {{ contact.zipcode }} </td></tr>
-                                            <tr><th>Phone</th><td> {{ contact.phone }} </td></tr>
-                                            <tr><th>email</th><td> {{ contact.email }} </td></tr>
-                                            <tr><th>Note</th><td> {{ contact.textnote }} </td></tr>
-                                        </table>
-                                    </div>
+                
+                        <div class="card contactCard">
+                            <div class="card-header" id="heading_{{ forloop.counter }}">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_{{ forloop.counter }}">
+                                        {{ contact.first_name }} {{ contact.last_name }}
+                                    </button>
+                                </h5>
+                            </div>
+                            <div id="collapse_{{ forloop.counter }}" class="collapse" aria-labelledby="headingOne" data-parent="#contactAccordion">
+                                <div class="card-body">
+                                    <table class='table'>
+                                        <tr>
+                                            <td class="orgtitle"> {{ contact.org_title }} </td>
+                                            <td class="orgtitle"> {{ contact.organization }} </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Address</th>
+                                            <td> {{ contact.address1 }} {{ contact.address2 }} </td>
+                                        </tr>
+                                        <tr>
+                                            <th></th>
+                                            <td> {{ contact.city }}, {{ contact.state }} {{ contact.zipcode }} </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Phone</th>
+                                            <td> {{ contact.phone }} </td>
+                                        </tr>
+                                        <tr>
+                                            <th>email</th>
+                                            <td> {{ contact.email }} </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Note</th>
+                                            <td> {{ contact.textnote }} </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
-
+                        </div>
                         {% endfor %}
+
                     </div>
                 </div>
             </div>
@@ -234,7 +200,7 @@
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
             maxZoom: 20,
-            id: 'mapbox.streets',
+            id: 'mapbox.satellite',
             accessToken: 'pk.eyJ1IjoiYXV0aGFsaWMiLCJhIjoiSHppSDJlWSJ9.h8QdzKDNKE1p_XDuzIBoSg',
         }).addTo(mymap);
 

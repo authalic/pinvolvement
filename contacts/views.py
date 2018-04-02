@@ -15,12 +15,12 @@ def workflow(request):
     View for developing and testing the Workflow form. Ultimately will replace the index view
     '''
     contact_form = ContactForm(prefix="contact")
-    subject_form = SubjectForm(prefix="contact")
+    subject_form = SubjectForm(prefix="subject")
     comment_form = CommentForm(prefix="comment")
 
     if request.method == 'POST':
 
-        subject_form = SubjectForm(request.POST, prefix="contact")
+        subject_form = SubjectForm(request.POST, prefix="subject")
 
         if all([
             subject_form.is_valid(),
@@ -46,6 +46,7 @@ def workflow(request):
             HttpResponse('Error!!!!')
 
     context = {
+        'contact_form': contact_form,
         'contacts': Contact.objects.all(),
         'subjects': Subject.objects.all(),
         'subject_form': SubjectForm(prefix="subject"),
