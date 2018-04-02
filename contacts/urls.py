@@ -11,6 +11,7 @@ urlpatterns = [
     path('contact/create', views.ContactCreate.as_view(), name='contact_create'),
     path('contact/<uuid:pk>/update', views.ContactUpdate.as_view(), name='contact_update'),
     path('contact/<uuid:pk>/delete', views.ContactDelete.as_view(), name='contact_delete'),
+    path('contact/post', views.ContactCreateOnly.as_view(), name='contactApi_post'),
 
     path('organizations/', views.OrganizationListView.as_view(), name='organizations'),
     path('organization/<uuid:pk>', views.OrganizationDetailView.as_view(), name='org-detail'),

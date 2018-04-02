@@ -48,9 +48,9 @@
         // display form to create new person, if not in Contacts lists
 
         function showContactInfo(contactID) {
-            // populate the #contactInfo div with Contact/Person's info
-
+            // populate the #contactInfo div, below the search bar, with Contact/Person's info
             // loop through Contacts/People, check if their Contact.id matches the contactID argument
+
             {% for contact in contacts %}
                 if (contactID == '{{ contact.id }}') {
                     $("#contactInfo").empty().append(
@@ -70,8 +70,8 @@
         
         function showTopicThread(topicID) {
             // get the specific Subject/Topic/Thread/Conversation, return the back-and-forth thread of comments
-
             // add the subjects/topics associated with the selected person
+
             {% for subject in subjects %}
                 if (topicID == '{{ subject.id }}') {
 
@@ -223,7 +223,7 @@
         };
 
 
-        // populate the Contact (people) dropdown list with all the names in the Contacts list
+        // populate the Contact (people) autocomplete dropdown list with all the names in the Contacts list
         function addContactsToDropdown() {
 
             {% for contact in contacts %}
@@ -277,6 +277,7 @@
 
                 console.log("Enter Key");
                 createNewContact($("#nameSearchField").val());
+                $("#contactAccordion").reload();
             };
         });
 

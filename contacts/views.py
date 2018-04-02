@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
+from rest_framework import generics
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse
@@ -8,6 +9,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_http_methods
 from .forms import SubjectForm, CommentForm, ContactForm
 from .models import Organization, Contact, Subject, Comment
+from .serializers import ContactSerializer
 
 
 def workflow(request):
@@ -273,3 +275,12 @@ def comment_create_view(request):
         print('Render empty unbound form') #testing purposes 
 
     return render(request, template, {'form': form})
+
+
+
+class ContactCreateOnly(generics.CreateAPIView):
+    '''
+    Endpoint to POST new Contacts. No other request types permitted.
+    '''
+    queryset = Contact.objects.all()  # is this necessary for POST?
+    serializer_class = ContactSerializer  # change this serializer
