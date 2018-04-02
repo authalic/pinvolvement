@@ -174,7 +174,7 @@
 
                                 // generate the HTML for each subject's accordion drawer
                                 accordionDrawer = `
-                                    <div class="card accordionCard">
+                                    <div class="card accordionCard topicCard">
                                         <div class="card-header" id="heading_{{ forloop.counter }}">
                                             <h5 class="mb-0">
                                                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_{{ forloop.counter }}">
@@ -189,8 +189,15 @@
                                         </div>
                                     </div>`
 
-                                topics.push([ "{{ subject }}" , accordionDrawer]);
+                                    drawerName = "#heading_{{ forloop.counter }}";
+  
+                                var counter = topics.push([ "{{ subject }}" , accordionDrawer]);
 
+                                // bind an event handler to zoom the map to the location when an accordion drawer is clicked
+                                $(document).on('click', '#heading_{{ forloop.counter }}', function() {
+                                    mymap.flyTo([{{ subject.lat }}, {{ subject.lon }}], 18);
+                                });
+                                
                             }
                         {% endfor %}
 
@@ -210,8 +217,8 @@
                     createNewContact(contactName);
             }
         };
-        
-        
+
+
         function addAccordionDrawers(topics) {
 
             $("#topicAccordion").append("<h5>Contact History</h5>");
@@ -221,7 +228,6 @@
 
             }
         };
-
 
 
         // populate the Contact (people) dropdown list with all the names in the Contacts list
@@ -280,7 +286,6 @@
                 createNewContact($("#nameSearchField").val());
             };
         });
-
 
         // initialize the autocomplete dropdown contact list
         addContactsToDropdown();
