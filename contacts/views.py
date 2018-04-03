@@ -9,7 +9,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_http_methods
 from .forms import SubjectForm, CommentForm, ContactForm
 from .models import Organization, Contact, Subject, Comment
-from .serializers import ContactSerializer
+from .serializers import ContactSerializer, CommentSerializer
 
 
 def workflow(request):
@@ -283,5 +283,13 @@ class ContactCreateOnly(generics.CreateAPIView):
     '''
     Endpoint to POST new Contacts. No other request types permitted.
     '''
-    queryset = Contact.objects.all()  # is this necessary for POST?
-    serializer_class = ContactSerializer  # change this serializer
+    queryset = Contact.objects.all()  # is this necessary for POST only?
+    serializer_class = ContactSerializer
+
+
+class CommentCreateOnly(generics.CreateAPIView):
+    '''
+    Endpoint to POST new Comments.
+    '''
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer

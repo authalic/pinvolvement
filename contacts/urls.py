@@ -26,7 +26,7 @@ urlpatterns = [
     # use view functions to create or update new Comment objects using Bootstrap
     path('comment/create', views.comment_create_view, name='comment_create'), 
     path('comment/<uuid:pk>/update', views.comment_update_view, name='comment_update'),
-
+    path('comment/post', views.CommentCreateOnly.as_view(), name='commentApi_post'),
 
     path('subjects/', views.SubjectListView.as_view(), name='subjects'),
     path('subject/<uuid:pk>', views.SubjectDetailView.as_view(), name='subject-detail'),

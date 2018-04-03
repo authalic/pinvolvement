@@ -25,12 +25,11 @@
 
 {% block title %}
 
-<title>PI SPA</title>
+<title>PI Single Page App</title>
 
 {% endblock %}
 
-
-{% block content %}
+{% block content %}  <!-- Everything in this block gets injected into the base.html template -->
 
 <div class="row">
 
@@ -64,15 +63,20 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control autocomplete" id="nameSearchField" placeholder="Search Person" />
                                     <div class="input-group-append">
-                                    <!-- Button trigger for Modal -->
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPersonModal">
-                                            +
-                                        </button>
+                                    <!-- close button for Modal -->
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPersonModal">+</button>
                                     </div>
                                 </div>
                     
                                 <!-- Display the selected Contact information here -->
                                 <div id="contactInfo"></div>
+
+
+                                
+                                <!-- include the subform for entering a new comment on the current topic -->
+                                {% include 'contacts/newCommentsubform.html' %}
+
+
                     
                             <!-- Accordion List:  HTML for the accordion drawers gets injected into the #topicAccordion div -->
                             <div class="tab-pane" id="topicList" role="tabpanel">
@@ -98,12 +102,12 @@
                                 <div class="modal-body">
                                     <form class="form" id="contactCreateForm">
                                         {% csrf_token %}
+
                                         <div class="form-row">
                                             <div class="col">
                                                 <label for="firstName">First Name</label>
                                                 <input type="text" class="form-control" id="firstName" name="first_name">
                                             </div>
-
                                             <div class="col">
                                                 <label for="lastName">Last Name</label>
                                                 <input type="text" class="form-control" id="lastName" name="last_name">
@@ -115,13 +119,12 @@
                                                 <input type="text" class="form-control" id="desc" name="textnote">
                                             </div>
                                         </div>
-
                                         <div class="form-row">
                                             <div class="col">
                                                 <label for="id_contact-organization">Organization</label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
-                                                        <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#newOrgModal">+</button>
+                                                        <button class="btn btn-primary disabled" type="button" data-toggle="collapse" data-target="#newOrgForm">+</button>
                                                     </div>
                                                     <select class="form-control input-group" name="organization">
                                                         <option value="">---</option>
@@ -129,8 +132,8 @@
                                                         {% for org in organizations %}
                                                             <option value="{{ org.org_name }}">{{ org.org_name }}</option>
                                                         {% endfor %}
-                                                    </select>
 
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col">
@@ -138,19 +141,16 @@
                                                 <input type="text" class="form-control" id="orgTitle" name="org_title">
                                             </div>
                                         </div>
-
                                         <div class="form-row">
                                             <div class="col">
                                                 <label for="email">Email Address</label>
                                                 <input type="email" class="form-control" id="email" name="email">
                                             </div>
-
                                             <div class="col">
                                                 <label for="phone">Phone</label>
                                                 <input type="text" class="form-control" id="phone" name="phone">
                                             </div>
                                         </div>
-
                                         <div class="form-row">
                                             <div class="col">
                                                 <label for="address1">Address</label>
@@ -161,7 +161,6 @@
                                                 <input type="text" class="form-control" id="address2" name="address2">
                                             </div>
                                         </div>
-
                                         <div class="form-row">
                                             <div class="col">
                                                 <label for="city">City</label>
@@ -178,69 +177,10 @@
                                         </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <!-- button -->
+                                    <!-- buttons -->
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button id="contactSubmitBtn" class="btn btn-primary" type="submit">Submit</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Modal form. add new Organization -->
-                    <div class="modal hide fade" id="newOrgModal" tabindex="-1" data-focus-on="input:first">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="personModalLongTitle">Create New Organization Record</h5>
-
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form class="form" id="orgCreateForm">
-                                        {% csrf_token %}
-                                        <div class="form-row">
-                                            <div class="col">
-                                                <label for="orgName">Organization Name</label>
-                                                <input type="text" class="form-control" id="orgName" name="org_name">
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col">
-                                                <label for="addr1">Address 1</label>
-                                                <input type="text" class="form-control" id="addr1" name="org_address1">
-                                            </div>
-                                            <div class="col">
-                                                <label for="addr2">Address 2</label>
-                                                <input type="text" class="form-control" id="addr2" name="org_address2">
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col">
-                                                <label for="orgCity">City</label>
-                                                <input type="text" class="form-control" id="orgCity" name="org_city">
-                                            </div>
-                                            <div class="col">
-                                                <label for="orgState">State</label>
-                                                <input type="text" class="form-control" id="orgState" name="org_state">
-                                            </div>
-                                            <div class="col">
-                                                <label for="orgState">Zip</label>
-                                                <input type="text" class="form-control" id="orgZip" name="org_zipcode">
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col">
-                                                <label for="orgCity">Phone</label>
-                                                <input type="text" class="form-control" id="orgPhone" name="org_phone">
-                                            </div>
-                                        </div>
-                                </div>
-                                <div class="modal-footer">
-                                        <!-- button -->
-                                        <button id="contactSubmitBtn" class="btn btn-primary" type="submit">Submit</button>
-                                    </form>
+                                    </form>  <!-- end of Form. must include Buttons -->
                                 </div>
                             </div>
                         </div>
@@ -269,8 +209,7 @@
                                             <td class="orgtitle"> {{ contact.organization }} </td>
                                         </tr>
                                         <tr>
-                                            <th>Address</th>
-                                            <td> {{ contact.address1 }} {{ contact.address2 }} </td>
+                                            <td colspan='2'> {{ contact.address1 }} {{ contact.address2 }} </td>
                                         </tr>
                                         <tr>
                                             <th></th>
@@ -320,10 +259,13 @@
 
         var contactList = []; // array of Contact names (first and last) as strings
         var contactIDs = {};  // object of {name : uuid} pairs
-        var topicList = [];  // list of Topics associated with a Contact/Person 
-        var topicIDs = {}; // object of {topic : uuid} pairs
+        var topicList = [];   // list of Topics associated with a Contact/Person 
+        var topicIDs = {};    // object of {topic : uuid} pairs
+
+        // jQuery UI widgets
+        $( "#datepicker" ).datepicker();
     
-        // configure Leaflet map
+        // configure Leaflet map in main window
         var mymap = L.map('mapid', {
             center: [40.755, -111.88],
             zoom: 12,
@@ -357,7 +299,7 @@
         });
     
         
-        // circle marker styling
+        // Red circle marker styling
         var geojsonMarkerStyling = {
             radius: 10,
             fillColor: "#ff7800",
@@ -367,6 +309,7 @@
             fillOpacity: 0.9
         };
     
+
         // go to town with Django template tags and context variables
         {% for subject in subjects %}
     
@@ -416,23 +359,47 @@
         };
     
     
-        // handle the form submit using jQuery AJAX
-        $("#contactCreateForm").submit(function (event) {
+        // handle the Contact (Person) Create form submit using jQuery AJAX
+        $("#contactCreateForm").submit(function(event) {
     
             // stop form from submitting normally
             event.preventDefault();
     
             $.ajax({
                 method: "POST",
-                // url: "http://authalic.pythonanywhere.com/pubinput/addcomment/",
-                url: "http://localhost:8000/contacts/contact/post",
+                // url: "http://authalic.pythonanywhere.com/conatcts/contact/post",  // deployment on pythonanywhere.com
+                url: "http://localhost:8000/contacts/contact/post",  // development on localhost
                 data: $("#contactCreateForm").serialize(),
                 success: function (e) {
                     console.log("Successful post");
                     $("#newPersonModal").modal('toggle');
     
-                    // reload the page to see the new contact in the autocomplete and Contact accordion list
-                    location.reload();
+                    location.reload();   // reload the page to see the new contact in the autocomplete and Contact accordion list
+                },
+                error: function (e) {
+                    console.log("Post Failed");
+                    return false;
+                }
+            });
+        });
+
+
+        // handle the Add New Comment mini-form using jQuery AJAX
+        $("#newCommentForm").submit(function(event) {
+
+            // stop form from submitting normally
+            event.preventDefault();
+
+            $.ajax({
+                method: "POST",
+                // url: "http://authalic.pythonanywhere.com/contacts/comment/post",  // deployment on pythonanywhere.com
+                url: "http://localhost:8000/contacts/comment/post",  // development on localhost
+                data: $("#contactCreateForm").serialize(),
+                success: function (e) {
+                    console.log("Successful post");
+                    $("#newPersonModal").modal('toggle');
+    
+                    location.reload();   // reload the page to see the new contact in the autocomplete and Contact accordion list
                 },
                 error: function (e) {
                     console.log("Post Failed");
@@ -442,20 +409,21 @@
         });
     
     
+
+        // when a name is entered in the Search field ...if that person is in Contacts list,
+        // show contact Info and Accordion list of previous topics below it, or
+        // display form to create new person, if not in Contacts lists
+
         // create a new contact using the form inputs
         function createNewContact(contactName) {
-            // this is where the form fields will be POSTed to the django View, and a new Contact object created
+            // this is where a new Contact object will be created, if the Person is not in the list of existing People/Contacts
     
             console.log("create a new contact");
         };
-    
-        // when a name is entered...
-        // show an Accordion list topics below it, if that person is in Contacts list, or
-        // display form to create new person, if not in Contacts lists
-    
+        
     
         function showContactInfo(contactID) {
-            // populate the #contactInfo div, below the search bar, with Contact/Person's info
+            // populate the #contactInfo <div>, below the search bar, with Contact/Person's info
             // loop through Contacts/People, check if their Contact.id matches the contactID argument
     
             {% for contact in contacts %}
@@ -471,20 +439,26 @@
                 }
             {% endfor %}
     
-            $("#nameSearchField").blur();
+            $("#nameSearchField").blur();  // remove focus from the search bar
         };
     
         
         function showTopicThread(topicID) {
             // get the specific Subject/Topic/Thread/Conversation, return the back-and-forth thread of comments
             // add the subjects/topics associated with the selected person
+
+            // display an Input field to add a new comment to the selected Topic stream
+
     
             {% for subject in subjects %}
                 if (topicID == '{{ subject.id }}') {
     
                     {% if subject.get_comments %}
+
+                        var newCommentForm = ""  // code for form to add new comment goes here
+                        // ****** Can the form be written in a separate HTML file and "included" here using a template?
     
-                        var accordionThread = "";
+                        var accordionThread = newCommentForm;  // input field goes here
     
                         {% for comment in subject.get_comments %}
                             {% if comment.is_incoming %}

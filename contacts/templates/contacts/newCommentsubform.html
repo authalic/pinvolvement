@@ -1,0 +1,62 @@
+<!-- Collapsable form to create a new Comment on the current Topic -->
+<div id="newCommentArea">
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseForm">New Comment</button>
+</div>
+<div class="collapse" id="collapseForm">
+    <form class="form" id="newCommentForm">
+        {% csrf_token %}
+
+        <div class="form-row">
+            <div class="col">
+                <label for="inputForm">Comment</label>
+                <textarea class="form-control" id="inputForm" placeholder="" name="commentxt" style="height: 120px;"></textarea>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                <div class="form-check-inline">
+                    <input class="form-check-input" type="radio" name="direction" value="in" id="commentIncoming" checked>
+                    <label class="form-check-label" for="commentIncoming">Incoming</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-check-inline">
+                    <input class="form-check-input" type="radio" name="direction" value="out" id="commentOutgoing">
+                    <label class="form-check-label" for="commentOutgoing">Outgoing</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                <select id="communicationMethod" name="method" class="form-control-sm">
+                    <option value="phone" selected>Phone</option>
+                    <option value="email">Email</option>
+                    <option value="person">In Person</option>
+                    <option value="web">Web Form</option>
+                </select>
+            </div>
+            <div class="col">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="followup" value="true" id="chkFollowup">
+                    <label class="form-check-label" for="commentOutgoing">Followup?</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden fields for gathering the remaining required data -->
+        <input type="hidden" id="contactIDhdn" name="contact">
+        <input type="hidden" id="employeeIDhdn" name="employee">
+        <input type="hidden" id="subjectIDhdn" name="subject">
+
+        <!-- Add a date/time picker here, to backdate the comment's timestamp
+    
+                                            <div class="form-row">
+                                                    <p>Date: <input type="text" id="datepicker"></p>
+                                            </div>
+                                            -->
+        <div class="form-row">
+            <button id="commentSubmitBtn" class="btn btn-primary" type="submit">Submit Comment</button>
+        </div>
+
+    </form>
+</div>

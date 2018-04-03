@@ -9,9 +9,6 @@ import uuid
 
 # NOTE:  setting the default User to settings.AUTH_USER_MODEL seems not to work
 
-# Create your models here.
-
-
 class Organization(models.Model):
     '''
     Class representing Organizations to which Contacts may belong
@@ -138,7 +135,7 @@ class Comment(models.Model):  # AKA:  Interaction
         ('phone', 'Phone Conversation'),
         ('email', 'Email Correspondence'),
         ('person', 'In-Person Conversation'),
-        ('web', 'Sumitted on Web Form'),
+        ('web', 'Submitted on Web Form'),
     ]
     method = models.CharField(max_length=6, choices=METHOD_CHOICES)
 
